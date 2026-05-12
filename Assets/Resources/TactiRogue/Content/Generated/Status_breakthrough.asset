@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Status_breakthrough
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
+  Id: breakthrough
+  DisplayName: 突破
+  Description: 造成碰撞暴击后，获得 1 个额外行动。
+  GrantedKeyword: 3
+  AttackModifier: 0
+  PushModifier: 0
+  ActionsGrantedOnApply: 0
+  DefaultDuration: 2
+  TickPhase: 2
+  Tint: {r: 0.78431374, g: 0.36862746, b: 0.2901961, a: 1}

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Action_charger_rush
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  Id: charger_rush
+  DisplayName: 直线冲锋
+  Description: 向前冲锋，并猛击命中的第一个目标。
+  ActionKind: 7
+  TargetMode: 1
+  TargetFilter: 0
+  MinRange: 1
+  MaxRange: 4
+  UseActorAttackValue: 1
+  DamageAmount: 0
+  HealAmount: 0
+  PushForce: 2
+  Radius: 0
+  MoveRange: 3
+  MovePattern: 2
+  MoveBeforeEffect: 1
+  ExtraActionsGranted: 0
+  ApplyStatusId: 
+  OverrideStatusDuration: -1
+  SummonEntityId: 
+  ConsumeActorAction: 1
+  AllowDiagonalTargeting: 1

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Action_banner_rally
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  Id: banner_rally
+  DisplayName: 战旗号令
+  Description: 令一名友军获得 1 个额外行动并施加鼓舞。
+  ActionKind: 3
+  TargetMode: 2
+  TargetFilter: 2
+  MinRange: 1
+  MaxRange: 2
+  UseActorAttackValue: 0
+  DamageAmount: 0
+  HealAmount: 0
+  PushForce: 0
+  Radius: 0
+  MoveRange: 0
+  MovePattern: 0
+  MoveBeforeEffect: 1
+  ExtraActionsGranted: 1
+  ApplyStatusId: inspired
+  OverrideStatusDuration: 1
+  SummonEntityId: 
+  ConsumeActorAction: 1
+  AllowDiagonalTargeting: 1

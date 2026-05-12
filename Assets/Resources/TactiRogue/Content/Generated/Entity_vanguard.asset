@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Entity_vanguard
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
+  Id: vanguard
+  DisplayName: 先锋
+  ShortLabel: 锋
+  Description: 主要的碰撞输出单位。
+  EntityKind: 1
+  DefaultTeam: 0
+  MaxHp: 4
+  Attack: 2
+  PushBonus: 0
+  ActionId: vanguard_ram
+  IntentDefinitionId: 
+  CanAct: 1
+  BlocksMovement: 1
+  OccupiesCell: 1
+  Targetable: 1
+  StartingStatusIds:
+  - breakthrough
+  Tint: {r: 0.7882353, g: 0.41960785, b: 0.2627451, a: 1}

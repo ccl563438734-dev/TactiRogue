@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Entity_guardian
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
+  Id: guardian
+  DisplayName: 守卫
+  ShortLabel: 守
+  Description: 前线嘲讽护卫。
+  EntityKind: 1
+  DefaultTeam: 0
+  MaxHp: 5
+  Attack: 2
+  PushBonus: 0
+  ActionId: guardian_bash
+  IntentDefinitionId: 
+  CanAct: 1
+  BlocksMovement: 1
+  OccupiesCell: 1
+  Targetable: 1
+  StartingStatusIds:
+  - taunt
+  Tint: {r: 0.36862746, g: 0.6039216, b: 0.45490196, a: 1}

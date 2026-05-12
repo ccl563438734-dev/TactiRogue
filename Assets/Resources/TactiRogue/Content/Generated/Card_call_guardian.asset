@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Card_call_guardian
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
+  Id: call_guardian
+  DisplayName: 召唤守卫
+  Description: 在指挥官 1 格范围内召唤一名守卫。
+  CardKind: 0
+  Cost: 1
+  ActionId: 
+  SummonEntityId: guardian
+  SummonMinRange: 1
+  SummonMaxRange: 1
+  Tint: {r: 0.36862746, g: 0.6039216, b: 0.45490196, a: 1}

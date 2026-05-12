@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Action_vanguard_ram
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  Id: vanguard_ram
+  DisplayName: 先锋冲撞
+  Description: 高推力近战打击，擅长制造碰撞。
+  ActionKind: 1
+  TargetMode: 2
+  TargetFilter: 3
+  MinRange: 1
+  MaxRange: 1
+  UseActorAttackValue: 1
+  DamageAmount: 0
+  HealAmount: 0
+  PushForce: 2
+  Radius: 0
+  MoveRange: 0
+  MovePattern: 0
+  MoveBeforeEffect: 1
+  ExtraActionsGranted: 0
+  ApplyStatusId: 
+  OverrideStatusDuration: -1
+  SummonEntityId: 
+  ConsumeActorAction: 1
+  AllowDiagonalTargeting: 1

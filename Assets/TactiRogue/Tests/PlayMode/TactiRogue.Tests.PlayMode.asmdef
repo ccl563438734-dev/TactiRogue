@@ -1,0 +1,19 @@
+{
+  "name": "TactiRogue.Tests.PlayMode",
+  "rootNamespace": "TactiRogue.Tests",
+  "references": [
+    "TactiRogue.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

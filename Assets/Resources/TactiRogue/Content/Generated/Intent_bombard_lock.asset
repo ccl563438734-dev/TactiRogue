@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Intent_bombard_lock
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:IntentDefinition
+  Id: bombard_lock
+  DisplayName: 轰炸
+  Description: 为下个敌方回合标记一片冲击区域。
+  IntentKind: 1
+  ActionId: bombardier_bomb
+  AcquireRange: 99
+  PreferCommander: 1
+  TargetingMode: 3
+  RevalidationPolicy: 2
+  FallbackMode: 1
+  Tint: {r: 0.80784315, g: 0.5568628, b: 0.25882354, a: 1}

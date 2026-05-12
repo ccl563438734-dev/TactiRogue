@@ -1,0 +1,22 @@
+{
+  "name": "TactiRogue.Tests.EditMode",
+  "rootNamespace": "TactiRogue.Tests",
+  "references": [
+    "TactiRogue.Runtime",
+    "TactiRogue.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

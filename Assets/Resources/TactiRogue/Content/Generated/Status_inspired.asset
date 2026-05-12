@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Status_inspired
+  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
+  Id: inspired
+  DisplayName: 鼓舞
+  Description: 攻击力 +1，持续到回合结束。
+  GrantedKeyword: 4
+  AttackModifier: 1
+  PushModifier: 0
+  ActionsGrantedOnApply: 0
+  DefaultDuration: 1
+  TickPhase: 2
+  Tint: {r: 0.8392157, g: 0.69411767, b: 0.29803923, a: 1}
