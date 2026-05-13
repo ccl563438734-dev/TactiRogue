@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace TactiRogue.Tests
 {
@@ -546,6 +547,73 @@ namespace TactiRogue.Tests
 
             Assert.AreEqual(0.6f, definition.TotalDuration, 0.001f);
             Assert.AreEqual(MotionTargetLayer.Portrait, definition.Segments[1].TargetLayer);
+        }
+
+        [Test]
+        public void UnitPresentationViewSplitsFrameAndPortraitFromModelPrefab()
+        {
+            var parent = new GameObject("PresentationTestParent");
+            var sourceModel = new GameObject("PresentationSourceModel");
+            Texture2D portraitTexture = null;
+            try
+            {
+                var frame = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                frame.name = "Frame";
+                frame.transform.SetParent(sourceModel.transform, false);
+                frame.transform.localRotation = Quaternion.Euler(10f, 20f, 30f);
+
+                var portrait = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                portrait.name = "Portrait";
+                portrait.transform.SetParent(sourceModel.transform, false);
+                portrait.transform.localPosition = new Vector3(0.1f, 0.2f, 0.3f);
+                portrait.transform.localRotation = Quaternion.Euler(10f, 20f, 30f);
+
+                var view = UnitPresentationView.CreateGenerated(999, parent.transform);
+                view.ConfigureDefaultPose(45f, 1.25f);
+                view.SetFramePrefab(sourceModel, null);
+
+                var frameModel = view.FrameRoot.GetChild(0);
+                var portraitModel = view.PortraitRoot.GetChild(0);
+                var frameRenderer = frameModel.GetComponentInChildren<Renderer>(true);
+
+                Assert.AreEqual("FrameModel", frameModel.name);
+                Assert.AreEqual("PortraitModel", portraitModel.name);
+                Assert.True(view.UsesModelPortrait());
+                Assert.NotNull(view.PortraitRenderer);
+                Assert.False(view.FrameRenderers.Contains(view.PortraitRenderer));
+                Assert.Less(Quaternion.Angle(frameModel.localRotation, portraitModel.localRotation), 0.01f);
+
+                portraitTexture = new Texture2D(2, 2);
+                view.SetPortrait(portraitTexture);
+
+                var portraitBlock = new MaterialPropertyBlock();
+                view.PortraitRenderer.GetPropertyBlock(portraitBlock);
+                Assert.AreSame(portraitTexture, portraitBlock.GetTexture("_MainTex"));
+
+                var frameBlock = new MaterialPropertyBlock();
+                frameRenderer.GetPropertyBlock(frameBlock);
+                Assert.Null(frameBlock.GetTexture("_MainTex"));
+
+                view.FrameRoot.localRotation = Quaternion.Euler(1f, 2f, 3f);
+                view.PortraitRoot.localScale = Vector3.one * 3f;
+                view.RotationRoot.localRotation = Quaternion.identity;
+                view.ResetVisualState();
+
+                Assert.Less(Quaternion.Angle(Quaternion.Euler(-45f, 0f, 0f), view.RotationRoot.localRotation), 0.01f);
+                Assert.Less(Quaternion.Angle(Quaternion.identity, view.FrameRoot.localRotation), 0.01f);
+                Assert.AreEqual(Vector3.one, view.PortraitRoot.localScale);
+                Assert.Less(Quaternion.Angle(frameModel.localRotation, portraitModel.localRotation), 0.01f);
+            }
+            finally
+            {
+                if (portraitTexture != null)
+                {
+                    Object.DestroyImmediate(portraitTexture);
+                }
+
+                Object.DestroyImmediate(parent);
+                Object.DestroyImmediate(sourceModel);
+            }
         }
 
         [Test]

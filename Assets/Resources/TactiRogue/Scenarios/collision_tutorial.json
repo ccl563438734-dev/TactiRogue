@@ -1,33 +1,58 @@
 {
-  "Id": "collision_tutorial",
-  "DisplayName": "Collision Tutorial",
-  "Description": "Practice slamming enemies into structures and walls.",
-  "DisplayOrder": 0,
-  "Width": 7,
-  "Height": 6,
-  "RandomSeed": 113,
-  "StartingMana": 3,
-  "MaxMana": 3,
-  "CardsPerTurn": 5,
-  "VoidCells": [],
-  "StartingDeck": [
-    "call_guardian",
-    "call_guardian",
-    "call_vanguard",
-    "call_skirmisher",
-    "call_slinger",
-    "call_banner",
-    "deploy_barricade",
-    "spell_forced_march",
-    "spell_command_shock",
-    "spell_fortify",
-    "spell_breakthrough"
-  ],
-  "Spawns": [
-    { "TemplateId": "commander_core", "Team": "Player", "X": 1, "Y": 2 },
-    { "TemplateId": "stone_pillar", "Team": "Neutral", "X": 4, "Y": 2 },
-    { "TemplateId": "hunter", "Team": "Enemy", "X": 5, "Y": 2 },
-    { "TemplateId": "bombardier", "Team": "Enemy", "X": 5, "Y": 4 },
-    { "TemplateId": "charger", "Team": "Enemy", "X": 5, "Y": 1 }
-  ]
+    "Id": "collision_tutorial",
+    "DisplayName": "Collision Tutorial",
+    "Description": "Practice slamming enemies into structures and walls.",
+    "DisplayOrder": 0,
+    "Width": 7,
+    "Height": 6,
+    "RandomSeed": 113,
+    "StartingMana": 3,
+    "MaxMana": 3,
+    "CardsPerTurn": 5,
+    "VoidCells": [],
+    "StartingDeck": [
+        "call_guardian",
+        "call_guardian",
+        "call_vanguard",
+        "call_skirmisher",
+        "call_slinger",
+        "call_banner",
+        "deploy_barricade",
+        "spell_forced_march",
+        "spell_command_shock",
+        "spell_fortify",
+        "spell_breakthrough"
+    ],
+    "Spawns": [
+        {
+            "TemplateId": "commander_core",
+            "Team": "Player",
+            "X": 1,
+            "Y": 2
+        },
+        {
+            "TemplateId": "stone_pillar",
+            "Team": "Neutral",
+            "X": 4,
+            "Y": 2
+        },
+        {
+            "TemplateId": "hunter",
+            "Team": "Enemy",
+            "X": 5,
+            "Y": 2
+        },
+        {
+            "TemplateId": "bombardier",
+            "Team": "Enemy",
+            "X": 5,
+            "Y": 4
+        },
+        {
+            "TemplateId": "charger",
+            "Team": "Enemy",
+            "X": 5,
+            "Y": 1
+        }
+    ]
 }

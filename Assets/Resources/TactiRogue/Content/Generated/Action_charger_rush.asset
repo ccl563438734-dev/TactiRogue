@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_charger_rush
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: charger_rush
-  DisplayName: 直线冲锋
-  Description: 向前冲锋，并猛击命中的第一个目标。
+  DisplayName: "\u76F4\u7EBF\u51B2\u950B"
+  Description: "\u5411\u524D\u51B2\u950B\uFF0C\u5E76\u731B\u51FB\u547D\u4E2D\u7684\u7B2C\u4E00\u4E2A\u76EE\u6807\u3002"
   ActionKind: 7
   TargetMode: 1
   TargetFilter: 0
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 1
+  AuthoringVersion: 1

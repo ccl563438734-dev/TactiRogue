@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_deploy_barricade
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: deploy_barricade
-  DisplayName: 部署路障
-  Description: 在 2 格范围内放置一个路障。
+  DisplayName: "\u90E8\u7F72\u8DEF\u969C"
+  Description: "\u5728 2 \u683C\u8303\u56F4\u5185\u653E\u7F6E\u4E00\u4E2A\u8DEF\u969C\u3002"
   CardKind: 0
   Cost: 1
   ActionId: 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_call_vanguard
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: call_vanguard
-  DisplayName: 召唤先锋
-  Description: 在 2 格范围内部署一名先锋。
+  DisplayName: "\u53EC\u5524\u5148\u950B"
+  Description: "\u5728 2 \u683C\u8303\u56F4\u5185\u90E8\u7F72\u4E00\u540D\u5148\u950B\u3002"
   CardKind: 0
   Cost: 2
   ActionId: 

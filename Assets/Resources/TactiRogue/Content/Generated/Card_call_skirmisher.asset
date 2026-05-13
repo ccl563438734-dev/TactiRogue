@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_call_skirmisher
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: call_skirmisher
-  DisplayName: 召唤散兵
-  Description: 在 2 格范围内部署一名散兵。
+  DisplayName: "\u53EC\u5524\u6563\u5175"
+  Description: "\u5728 2 \u683C\u8303\u56F4\u5185\u90E8\u7F72\u4E00\u540D\u6563\u5175\u3002"
   CardKind: 0
   Cost: 1
   ActionId: 

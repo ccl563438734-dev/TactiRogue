@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_spell_fortify
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: spell_fortify
-  DisplayName: 固守号令
-  Description: 治疗一名友军并施加嘲讽。
+  DisplayName: "\u56FA\u5B88\u53F7\u4EE4"
+  Description: "\u6CBB\u7597\u4E00\u540D\u53CB\u519B\u5E76\u65BD\u52A0\u5632\u8BBD\u3002"
   CardKind: 1
   Cost: 1
   ActionId: fortify_order

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_hunter_slash
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: hunter_slash
-  DisplayName: 追猎斩击
-  Description: 先走入攻击范围，再发动打击并击退。
+  DisplayName: "\u8FFD\u730E\u65A9\u51FB"
+  Description: "\u5148\u8D70\u5165\u653B\u51FB\u8303\u56F4\uFF0C\u518D\u53D1\u52A8\u6253\u51FB\u5E76\u51FB\u9000\u3002"
   ActionKind: 1
   TargetMode: 2
   TargetFilter: 3
@@ -25,8 +25,8 @@ MonoBehaviour:
   HealAmount: 0
   PushForce: 1
   Radius: 0
-  MoveRange: 1
-  MovePattern: 1
+  MoveRange: 0
+  MovePattern: 0
   MoveBeforeEffect: 1
   ExtraActionsGranted: 0
   ApplyStatusId: 
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

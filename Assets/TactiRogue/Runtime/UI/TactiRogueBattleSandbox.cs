@@ -199,6 +199,11 @@ namespace TactiRogue
             return _hudController != null && _hudController.TryGetUnitPresentationHasStandardHierarchy(entityId);
         }
 
+        public bool TryGetUnitPresentationUsesModelPortrait(int entityId)
+        {
+            return _hudController != null && _hudController.TryGetUnitPresentationUsesModelPortrait(entityId);
+        }
+
         public IReadOnlyList<CardPileViewEntry> GetViewedPileEntries()
         {
             if (State == null || ViewedPileZone == CardZone.None)

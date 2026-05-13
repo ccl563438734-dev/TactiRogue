@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_call_guardian
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: call_guardian
-  DisplayName: 召唤守卫
-  Description: 在指挥官 1 格范围内召唤一名守卫。
+  DisplayName: "\u53EC\u5524\u5B88\u536B"
+  Description: "\u5728\u6307\u6325\u5B98 1 \u683C\u8303\u56F4\u5185\u53EC\u5524\u4E00\u540D\u5B88\u536B\u3002"
   CardKind: 0
   Cost: 1
   ActionId: 

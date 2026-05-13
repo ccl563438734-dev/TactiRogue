@@ -208,6 +208,11 @@ namespace TactiRogue
             return _board3DController != null && _board3DController.TryGetUnitPresentationHasStandardHierarchy(entityId);
         }
 
+        public bool TryGetUnitPresentationUsesModelPortrait(int entityId)
+        {
+            return _board3DController != null && _board3DController.TryGetUnitPresentationUsesModelPortrait(entityId);
+        }
+
         public void Build(BattleSandboxBootstrap host)
         {
             _font = Resources.GetBuiltinResource<Font>("Arial.ttf");

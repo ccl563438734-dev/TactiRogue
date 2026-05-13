@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_vanguard
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: vanguard
-  DisplayName: 先锋
-  ShortLabel: 锋
-  Description: 主要的碰撞输出单位。
+  DisplayName: "\u5148\u950B"
+  ShortLabel: "\u950B"
+  Description: "\u4E3B\u8981\u7684\u78B0\u649E\u8F93\u51FA\u5355\u4F4D\u3002"
   EntityKind: 1
   DefaultTeam: 0
   MaxHp: 4
@@ -27,6 +27,16 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 2
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds:
   - breakthrough
   Tint: {r: 0.7882353, g: 0.41960785, b: 0.2627451, a: 1}
+  AuthoringVersion: 1

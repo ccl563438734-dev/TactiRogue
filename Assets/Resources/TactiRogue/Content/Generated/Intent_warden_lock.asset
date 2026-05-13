@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Intent_warden_lock
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:IntentDefinition
   Id: warden_lock
-  DisplayName: 弩击
-  Description: 锁定一名单位，并发射远程击退攻击。
+  DisplayName: "\u5F29\u51FB"
+  Description: "\u9501\u5B9A\u4E00\u540D\u5355\u4F4D\uFF0C\u5E76\u53D1\u5C04\u8FDC\u7A0B\u51FB\u9000\u653B\u51FB\u3002"
   IntentKind: 0
   ActionId: warden_bolt
   AcquireRange: 99

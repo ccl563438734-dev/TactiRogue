@@ -12,6 +12,10 @@
 - 占位 HUD 与调试面板
 - Excel 作为唯一长期策划数据源
 
+棋子表现层级、Frame/Portrait 绑定和 Motion 播放规则见：
+
+- [TactiRogue 棋子表现与 Motion 使用说明](TactiRoguePresentationMotionGuide.md)
+
 运行时正式加载的资源仍然是：
 
 - `Assets/Resources/TactiRogue/Content/TactiRogueContentDatabase.asset`

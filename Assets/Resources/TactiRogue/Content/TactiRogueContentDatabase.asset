@@ -13,50 +13,64 @@ MonoBehaviour:
   m_Name: TactiRogueContentDatabase
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:TactiRogueContentDatabase
   StatusTemplates:
-  - {fileID: 11400000, guid: 277788b86da3f3e4e8da6d695950b85c, type: 2}
   - {fileID: 11400000, guid: d56c3ab6df16b794e8789ffc83b3620b, type: 2}
   - {fileID: 11400000, guid: a5cfc011459318a4091a9e398bfbfb95, type: 2}
   - {fileID: 11400000, guid: d65fae25d472f3b4c8415263f9e916ff, type: 2}
+  - {fileID: 11400000, guid: 277788b86da3f3e4e8da6d695950b85c, type: 2}
   ActionDefinitions:
-  - {fileID: 11400000, guid: 22de2ae5bd7099e42b7064895a2fe734, type: 2}
-  - {fileID: 11400000, guid: e12eb8304c5fbf44590e6f210b20ad3f, type: 2}
-  - {fileID: 11400000, guid: d8d114121a1fe0c4db01c7b769ca31eb, type: 2}
-  - {fileID: 11400000, guid: c8b45c4550ce7574aa6cc2089ebf3329, type: 2}
   - {fileID: 11400000, guid: af0716c03c969c147a1d21ce6d3758c2, type: 2}
-  - {fileID: 11400000, guid: ed3d519d25f12a64a9bebcff5a4194be, type: 2}
   - {fileID: 11400000, guid: ecc47eb13ef9f6842ae3fa970b761102, type: 2}
+  - {fileID: 11400000, guid: abe30959d5c5fef448588d1a985dc684, type: 2}
   - {fileID: 11400000, guid: 6754affa4bfb62d47829fa32fbd8d93f, type: 2}
-  - {fileID: 11400000, guid: 3ca7081c1b83b994896db3239fa2e35d, type: 2}
   - {fileID: 11400000, guid: 7cac574cfcb4f8441b2ddabe34ccc7a2, type: 2}
+  - {fileID: 11400000, guid: 187fecff5c68042408bf6aa865848061, type: 2}
   - {fileID: 11400000, guid: a8ed3a0fdcec66745b337362f72b5bab, type: 2}
   - {fileID: 11400000, guid: 3ac0fceabb083df48b1886298d478b50, type: 2}
-  - {fileID: 11400000, guid: abe30959d5c5fef448588d1a985dc684, type: 2}
+  - {fileID: 11400000, guid: 22de2ae5bd7099e42b7064895a2fe734, type: 2}
+  - {fileID: 11400000, guid: ed3d519d25f12a64a9bebcff5a4194be, type: 2}
+  - {fileID: 11400000, guid: d8d114121a1fe0c4db01c7b769ca31eb, type: 2}
+  - {fileID: 11400000, guid: c8b45c4550ce7574aa6cc2089ebf3329, type: 2}
+  - {fileID: 11400000, guid: e12eb8304c5fbf44590e6f210b20ad3f, type: 2}
+  - {fileID: 11400000, guid: 3ca7081c1b83b994896db3239fa2e35d, type: 2}
   EntityTemplates:
-  - {fileID: 11400000, guid: cecc2d0727793fd4b9cbd0a3c1e94432, type: 2}
-  - {fileID: 11400000, guid: 0dfb985057882ec43bd3e6bf69909375, type: 2}
-  - {fileID: 11400000, guid: b2d3216999140ae41bb168cf05a63e2d, type: 2}
-  - {fileID: 11400000, guid: d6e1d3fcb6b4e084eb3d598ac93d3517, type: 2}
-  - {fileID: 11400000, guid: 649bc286c785f08439173a49b3dd50b8, type: 2}
+  - {fileID: 11400000, guid: 1096c60ec420b2f4fb33b51f755cf508, type: 2}
   - {fileID: 11400000, guid: fd921f4771b4a9141a04087b54145f1e, type: 2}
-  - {fileID: 11400000, guid: 37f9f8fb2d5ad0e49aada8cbf6ec48dc, type: 2}
+  - {fileID: 11400000, guid: de713d9e09bb16046b7fdd4ddf36ac7b, type: 2}
   - {fileID: 11400000, guid: e0dff6136e5281b448533193786aad22, type: 2}
   - {fileID: 11400000, guid: 091f84837371ccd45966dcf5a52648b0, type: 2}
-  - {fileID: 11400000, guid: 1096c60ec420b2f4fb33b51f755cf508, type: 2}
+  - {fileID: 11400000, guid: cecc2d0727793fd4b9cbd0a3c1e94432, type: 2}
+  - {fileID: 11400000, guid: 0dfb985057882ec43bd3e6bf69909375, type: 2}
+  - {fileID: 11400000, guid: 37f9f8fb2d5ad0e49aada8cbf6ec48dc, type: 2}
+  - {fileID: 11400000, guid: d6e1d3fcb6b4e084eb3d598ac93d3517, type: 2}
+  - {fileID: 11400000, guid: 649bc286c785f08439173a49b3dd50b8, type: 2}
   - {fileID: 11400000, guid: 2fd7afed0a237194bb3ca2e613e6b255, type: 2}
-  - {fileID: 11400000, guid: de713d9e09bb16046b7fdd4ddf36ac7b, type: 2}
+  - {fileID: 11400000, guid: b2d3216999140ae41bb168cf05a63e2d, type: 2}
   CardTemplates:
+  - {fileID: 11400000, guid: ac5945e03adc9d149af338b672a0608d, type: 2}
   - {fileID: 11400000, guid: b19990bd6ca7505419a7e8e5e6633bf2, type: 2}
-  - {fileID: 11400000, guid: ab20d07d6e8fff944bcbc476d110ad01, type: 2}
   - {fileID: 11400000, guid: cc56e26ccbbee23428eddcb6753f1366, type: 2}
   - {fileID: 11400000, guid: 168ffbafed4feaf499b8512d1b31d086, type: 2}
-  - {fileID: 11400000, guid: ac5945e03adc9d149af338b672a0608d, type: 2}
+  - {fileID: 11400000, guid: ab20d07d6e8fff944bcbc476d110ad01, type: 2}
   - {fileID: 11400000, guid: e9fb3a5ccb53d334bb54d3cbfcc0975c, type: 2}
-  - {fileID: 11400000, guid: d3ef3bb279f3b0548996c49936cb58c3, type: 2}
-  - {fileID: 11400000, guid: f5602f6295ff21045a5ef989f416eb86, type: 2}
-  - {fileID: 11400000, guid: d98b0d5c032d25f4da78ec9a00cae7bd, type: 2}
   - {fileID: 11400000, guid: 1aa10d2217e8cdd418c97c562298433f, type: 2}
+  - {fileID: 11400000, guid: f5602f6295ff21045a5ef989f416eb86, type: 2}
+  - {fileID: 11400000, guid: d3ef3bb279f3b0548996c49936cb58c3, type: 2}
+  - {fileID: 11400000, guid: d98b0d5c032d25f4da78ec9a00cae7bd, type: 2}
   IntentDefinitions:
-  - {fileID: 11400000, guid: 454df8dff46cb76429ad4baf03e5ae13, type: 2}
   - {fileID: 11400000, guid: 4bc07f5961a3c4b43b12dfdcebc4f995, type: 2}
   - {fileID: 11400000, guid: 1777b19d23d03e84b8a6cab66eb4f15d, type: 2}
+  - {fileID: 11400000, guid: 454df8dff46cb76429ad4baf03e5ae13, type: 2}
   - {fileID: 11400000, guid: 6888d864b1f43324fbe06071a43ed5d6, type: 2}
+  CardPieceVisualDefinitions:
+  - {fileID: 11400000, guid: 5bc68e5157d06b74f83d0a6b574b9ea7, type: 2}
+  - {fileID: 11400000, guid: 2bd4cdbac76356b43bc09672b2d6cea8, type: 2}
+  - {fileID: 11400000, guid: bc9263e5a2549684dab89fddee080ba6, type: 2}
+  - {fileID: 11400000, guid: 922875f04b6dbd4488e98c1dc5710aa9, type: 2}
+  - {fileID: 11400000, guid: 2234e60828e1ea34b8fc532bd718f627, type: 2}
+  - {fileID: 11400000, guid: 7482835f28e526e4c8f8ffd5c3605421, type: 2}
+  - {fileID: 11400000, guid: aab46b45a8c22fa4487f0c5aa5b2c84f, type: 2}
+  - {fileID: 11400000, guid: b973dad9c5a4c984bbf7e0552683916d, type: 2}
+  - {fileID: 11400000, guid: 0c8c43dd50607584f9d4c0d817329fa8, type: 2}
+  - {fileID: 11400000, guid: ef63b1bd44c5bb544bb8bf7de2a5d476, type: 2}
+  - {fileID: 11400000, guid: 7294127a8ccb61f469e822f2cb0dc73e, type: 2}
+  - {fileID: 11400000, guid: 059a894b75868d147a16857627147d0e, type: 2}

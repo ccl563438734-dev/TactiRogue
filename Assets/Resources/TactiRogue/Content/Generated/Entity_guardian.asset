@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_guardian
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: guardian
-  DisplayName: 守卫
-  ShortLabel: 守
-  Description: 前线嘲讽护卫。
+  DisplayName: "\u5B88\u536B"
+  ShortLabel: "\u5B88"
+  Description: "\u524D\u7EBF\u5632\u8BBD\u62A4\u536B\u3002"
   EntityKind: 1
   DefaultTeam: 0
   MaxHp: 5
@@ -27,6 +27,16 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 2
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds:
   - taunt
   Tint: {r: 0.36862746, g: 0.6039216, b: 0.45490196, a: 1}
+  AuthoringVersion: 1

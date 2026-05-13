@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_spell_breakthrough
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: spell_breakthrough
-  DisplayName: 突破号令
-  Description: 对一名友军施加突破。
+  DisplayName: "\u7A81\u7834\u53F7\u4EE4"
+  Description: "\u5BF9\u4E00\u540D\u53CB\u519B\u65BD\u52A0\u7A81\u7834\u3002"
   CardKind: 1
   Cost: 1
   ActionId: breakthrough_order

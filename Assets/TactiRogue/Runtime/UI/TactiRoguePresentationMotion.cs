@@ -146,6 +146,35 @@ namespace TactiRogue
 
     public sealed class UnitPresentationView : MonoBehaviour
     {
+        private struct TransformDefaults
+        {
+            public Vector3 LocalPosition;
+            public Quaternion LocalRotation;
+            public Vector3 LocalScale;
+
+            public static TransformDefaults Capture(Transform target)
+            {
+                return new TransformDefaults
+                {
+                    LocalPosition = target == null ? Vector3.zero : target.localPosition,
+                    LocalRotation = target == null ? Quaternion.identity : target.localRotation,
+                    LocalScale = target == null ? Vector3.one : target.localScale,
+                };
+            }
+
+            public void ApplyTo(Transform target)
+            {
+                if (target == null)
+                {
+                    return;
+                }
+
+                target.localPosition = LocalPosition;
+                target.localRotation = LocalRotation;
+                target.localScale = LocalScale;
+            }
+        }
+
         private static readonly int MainTexId = Shader.PropertyToID("_MainTex");
         private MaterialPropertyBlock _portraitBlock;
         private readonly List<Renderer> _frameRenderers = new List<Renderer>();
@@ -161,8 +190,16 @@ namespace TactiRogue
         [SerializeField] private Transform _selectionSocket;
         [SerializeField] private Renderer _portraitRenderer;
 
-        private Quaternion _defaultRotationRootRotation = Quaternion.identity;
-        private Vector3 _defaultVisualRootScale = Vector3.one;
+        private bool _defaultsCaptured;
+        private TransformDefaults _motionRootDefault;
+        private TransformDefaults _rotationRootDefault;
+        private TransformDefaults _scaleRootDefault;
+        private TransformDefaults _visualRootDefault;
+        private TransformDefaults _frameRootDefault;
+        private TransformDefaults _portraitRootDefault;
+        private TransformDefaults _shadowSocketDefault;
+        private TransformDefaults _vfxSocketDefault;
+        private TransformDefaults _selectionSocketDefault;
         private GameObject _frameInstance;
         private GameObject _portraitPlane;
 
@@ -197,9 +234,10 @@ namespace TactiRogue
             _vfxSocket = FindOrCreate(_visualRoot, "VFXSocket", _vfxSocket);
             _selectionSocket = FindOrCreate(_visualRoot, "SelectionSocket", _selectionSocket);
 
-            if (_portraitRenderer == null)
+            if (!_defaultsCaptured)
             {
-                EnsurePortraitPlane();
+                CaptureDefaultState();
+                _defaultsCaptured = true;
             }
 
             RefreshRendererCaches();
@@ -208,44 +246,32 @@ namespace TactiRogue
         public void ConfigureDefaultPose(float idleTiltAngle, float defaultScale)
         {
             EnsureStructure();
-            _defaultRotationRootRotation = Quaternion.Euler(-(90f - idleTiltAngle), 0f, 0f);
-            _defaultVisualRootScale = Vector3.one * Mathf.Max(0.01f, defaultScale);
+            _rotationRootDefault.LocalRotation = Quaternion.Euler(-(90f - idleTiltAngle), 0f, 0f);
+            _visualRootDefault.LocalScale = Vector3.one * Mathf.Max(0.01f, defaultScale);
             ResetVisualState();
         }
 
         public void SetFramePrefab(GameObject framePrefab, Material frameMaterial)
         {
             EnsureStructure();
-            if (_frameInstance != null)
-            {
-                DestroyRuntimeObject(_frameInstance);
-                _frameInstance = null;
-            }
-
-            foreach (Transform child in _frameRoot)
-            {
-                DestroyRuntimeObject(child.gameObject);
-            }
+            ClearVisualChildren();
 
             if (framePrefab != null)
             {
-                _frameInstance = Instantiate(framePrefab, _frameRoot, false);
-                _frameInstance.name = "FrameModel";
+                InstantiateSplitFramePrefab(framePrefab);
             }
             else
             {
-                _frameInstance = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                _frameInstance.name = "RuntimeFrameFallback";
-                _frameInstance.transform.SetParent(_frameRoot, false);
-                _frameInstance.transform.localScale = new Vector3(1.08f, 1.42f, 0.08f);
-                var collider = _frameInstance.GetComponent<Collider>();
-                if (collider != null)
-                {
-                    DestroyRuntimeObject(collider);
-                }
+                CreateRuntimeFrameFallback();
             }
 
             RefreshRendererCaches();
+            if (_portraitRenderer == null)
+            {
+                EnsurePortraitPlane();
+                RefreshRendererCaches();
+            }
+
             SetFrameMaterial(frameMaterial);
         }
 
@@ -254,7 +280,12 @@ namespace TactiRogue
             EnsureStructure();
             if (_portraitRenderer == null)
             {
-                return;
+                EnsurePortraitPlane();
+                RefreshRendererCaches();
+                if (_portraitRenderer == null)
+                {
+                    return;
+                }
             }
 
             if (_portraitBlock == null)
@@ -348,24 +379,15 @@ namespace TactiRogue
         {
             EnsureStructure();
             KillTweens();
-            _motionRoot.localPosition = Vector3.zero;
-            _motionRoot.localRotation = Quaternion.identity;
-            _motionRoot.localScale = Vector3.one;
-            _rotationRoot.localPosition = Vector3.zero;
-            _rotationRoot.localRotation = _defaultRotationRootRotation;
-            _rotationRoot.localScale = Vector3.one;
-            _scaleRoot.localPosition = Vector3.zero;
-            _scaleRoot.localRotation = Quaternion.identity;
-            _scaleRoot.localScale = Vector3.one;
-            _visualRoot.localPosition = Vector3.zero;
-            _visualRoot.localRotation = Quaternion.identity;
-            _visualRoot.localScale = _defaultVisualRootScale;
-            _frameRoot.localPosition = Vector3.zero;
-            _frameRoot.localRotation = Quaternion.identity;
-            _frameRoot.localScale = Vector3.one;
-            _portraitRoot.localPosition = Vector3.zero;
-            _portraitRoot.localRotation = Quaternion.identity;
-            _portraitRoot.localScale = Vector3.one;
+            _motionRootDefault.ApplyTo(_motionRoot);
+            _rotationRootDefault.ApplyTo(_rotationRoot);
+            _scaleRootDefault.ApplyTo(_scaleRoot);
+            _visualRootDefault.ApplyTo(_visualRoot);
+            _frameRootDefault.ApplyTo(_frameRoot);
+            _portraitRootDefault.ApplyTo(_portraitRoot);
+            _shadowSocketDefault.ApplyTo(_shadowSocket);
+            _vfxSocketDefault.ApplyTo(_vfxSocket);
+            _selectionSocketDefault.ApplyTo(_selectionSocket);
         }
 
         public void ResetLayer(MotionTargetLayer layer)
@@ -376,9 +398,7 @@ namespace TactiRogue
                 return;
             }
 
-            target.localPosition = Vector3.zero;
-            target.localScale = layer == MotionTargetLayer.VisualRoot ? _defaultVisualRootScale : Vector3.one;
-            target.localRotation = layer == MotionTargetLayer.RotationRoot ? _defaultRotationRootRotation : Quaternion.identity;
+            GetDefaults(layer).ApplyTo(target);
         }
 
         public void KillTweens()
@@ -393,6 +413,114 @@ namespace TactiRogue
             KillTween(_shadowSocket);
             KillTween(_vfxSocket);
             KillTween(_selectionSocket);
+        }
+
+        public bool UsesModelPortrait()
+        {
+            return _portraitRenderer != null && (_portraitPlane == null || _portraitRenderer.gameObject != _portraitPlane);
+        }
+
+        private void CaptureDefaultState()
+        {
+            _motionRootDefault = TransformDefaults.Capture(_motionRoot);
+            _rotationRootDefault = TransformDefaults.Capture(_rotationRoot);
+            _scaleRootDefault = TransformDefaults.Capture(_scaleRoot);
+            _visualRootDefault = TransformDefaults.Capture(_visualRoot);
+            _frameRootDefault = TransformDefaults.Capture(_frameRoot);
+            _portraitRootDefault = TransformDefaults.Capture(_portraitRoot);
+            _shadowSocketDefault = TransformDefaults.Capture(_shadowSocket);
+            _vfxSocketDefault = TransformDefaults.Capture(_vfxSocket);
+            _selectionSocketDefault = TransformDefaults.Capture(_selectionSocket);
+        }
+
+        private TransformDefaults GetDefaults(MotionTargetLayer layer)
+        {
+            switch (layer)
+            {
+                case MotionTargetLayer.MotionRoot:
+                    return _motionRootDefault;
+                case MotionTargetLayer.RotationRoot:
+                    return _rotationRootDefault;
+                case MotionTargetLayer.ScaleRoot:
+                    return _scaleRootDefault;
+                case MotionTargetLayer.VisualRoot:
+                    return _visualRootDefault;
+                case MotionTargetLayer.Frame:
+                    return _frameRootDefault;
+                case MotionTargetLayer.Portrait:
+                    return _portraitRootDefault;
+                case MotionTargetLayer.ShadowSocket:
+                    return _shadowSocketDefault;
+                case MotionTargetLayer.VFXSocket:
+                    return _vfxSocketDefault;
+                case MotionTargetLayer.SelectionSocket:
+                    return _selectionSocketDefault;
+                default:
+                    return TransformDefaults.Capture(null);
+            }
+        }
+
+        private void ClearVisualChildren()
+        {
+            DestroyChildren(_frameRoot);
+            DestroyChildren(_portraitRoot);
+            _frameInstance = null;
+            _portraitPlane = null;
+            _portraitRenderer = null;
+            _frameRenderers.Clear();
+        }
+
+        private void InstantiateSplitFramePrefab(GameObject framePrefab)
+        {
+            var prefabInstance = Instantiate(framePrefab, _visualRoot, false);
+            prefabInstance.name = $"{framePrefab.name}_VisualModel";
+
+            var frameNode = FindDescendant(prefabInstance.transform, "Frame");
+            var portraitNode = FindDescendant(prefabInstance.transform, "Portrait");
+            var movedRoot = false;
+
+            if (frameNode != null)
+            {
+                var frameObject = frameNode.gameObject;
+                frameObject.name = "FrameModel";
+                frameObject.transform.SetParent(_frameRoot, true);
+                _frameInstance = frameObject;
+                movedRoot |= frameObject == prefabInstance;
+            }
+
+            if (portraitNode != null)
+            {
+                var portraitObject = portraitNode.gameObject;
+                portraitObject.name = "PortraitModel";
+                portraitObject.transform.SetParent(_portraitRoot, true);
+                _portraitRenderer = portraitObject.GetComponentInChildren<Renderer>(true);
+                movedRoot |= portraitObject == prefabInstance;
+            }
+
+            if (frameNode == null)
+            {
+                prefabInstance.transform.SetParent(_frameRoot, true);
+                _frameInstance = prefabInstance;
+                movedRoot = true;
+            }
+
+            if (!movedRoot)
+            {
+                DestroyRuntimeObject(prefabInstance);
+            }
+        }
+
+        private void CreateRuntimeFrameFallback()
+        {
+            _frameInstance = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            _frameInstance.name = "RuntimeFrameFallback";
+            _frameInstance.transform.SetParent(_frameRoot, false);
+            _frameInstance.transform.localScale = new Vector3(1.08f, 1.42f, 0.08f);
+            var collider = _frameInstance.GetComponent<Collider>();
+            if (collider != null)
+            {
+                DestroyRuntimeObject(collider);
+            }
         }
 
         private void EnsurePortraitPlane()
@@ -448,6 +576,49 @@ namespace TactiRogue
             var child = new GameObject(name);
             child.transform.SetParent(parent, false);
             return child.transform;
+        }
+
+        private static Transform FindDescendant(Transform parent, string name)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            if (string.Equals(parent.name, name, StringComparison.OrdinalIgnoreCase))
+            {
+                return parent;
+            }
+
+            foreach (Transform child in parent)
+            {
+                var result = FindDescendant(child, name);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        private static void DestroyChildren(Transform parent)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            var children = new List<GameObject>();
+            foreach (Transform child in parent)
+            {
+                children.Add(child.gameObject);
+            }
+
+            foreach (var child in children)
+            {
+                DestroyRuntimeObject(child);
+            }
         }
 
         private static void KillTween(Transform target)

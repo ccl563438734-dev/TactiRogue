@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Status_breakthrough
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
   Id: breakthrough
-  DisplayName: 突破
-  Description: 造成碰撞暴击后，获得 1 个额外行动。
+  DisplayName: "\u7A81\u7834"
+  Description: "\u9020\u6210\u78B0\u649E\u66B4\u51FB\u540E\uFF0C\u83B7\u5F97 1 \u4E2A\u989D\u5916\u884C\u52A8\u3002"
   GrantedKeyword: 3
   AttackModifier: 0
   PushModifier: 0

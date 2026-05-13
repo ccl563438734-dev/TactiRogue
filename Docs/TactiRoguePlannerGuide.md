@@ -2,6 +2,10 @@
 
 这份文档是给策划直接使用的。当前项目里的大多数战斗数据、单位数据、卡牌数据、AI 数据和战斗预设，已经统一改成 Excel 编辑。
 
+棋子模型、`IdleTiltAngle`、Frame/Portrait 和 Motion 编辑器的使用说明见：
+
+- [TactiRogue 棋子表现与 Motion 使用说明](TactiRoguePresentationMotionGuide.md)
+
 ## 1. 现在主要改哪里
 
 唯一长期源数据：

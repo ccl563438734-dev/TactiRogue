@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_commander_core
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: commander_core
-  DisplayName: "\u6307\u6325\u5B98"
-  ShortLabel: "\u6307"
-  Description: "\u73A9\u5BB6\u6838\u5FC3\uFF0C\u4E5F\u662F\u53EC\u5524\u8D77\u70B9\u3002"
+  DisplayName: '"\u6307\u6325\u5B98"'
+  ShortLabel: '"\u6307"'
+  Description: '"\u73A9\u5BB6\u6838\u5FC3\uFF0C\u4E5F\u662F\u53EC\u5524\u8D77\u70B9\u3002"'
   EntityKind: 0
   DefaultTeam: 0
   MaxHp: 10
@@ -29,7 +29,7 @@ MonoBehaviour:
   Targetable: 1
   MoveProfile:
     UseSeparateMovePhase: 1
-    MoveRange: 1
+    MoveRange: 2
     MoveType: 1
     AllowStayInPlace: 1
     AllowDiagonalMove: 1
@@ -38,3 +38,4 @@ MonoBehaviour:
     RequirePath: 1
   StartingStatusIds: []
   Tint: {r: 0.17254902, g: 0.5411765, b: 0.6392157, a: 1}
+  AuthoringVersion: 1

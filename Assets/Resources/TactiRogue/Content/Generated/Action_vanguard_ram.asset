@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_vanguard_ram
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: vanguard_ram
-  DisplayName: 先锋冲撞
-  Description: 高推力近战打击，擅长制造碰撞。
+  DisplayName: "\u5148\u950B\u51B2\u649E"
+  Description: "\u9AD8\u63A8\u529B\u8FD1\u6218\u6253\u51FB\uFF0C\u64C5\u957F\u5236\u9020\u78B0\u649E\u3002"
   ActionKind: 1
   TargetMode: 2
   TargetFilter: 3
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

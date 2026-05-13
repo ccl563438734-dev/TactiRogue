@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_charger
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: charger
-  DisplayName: 冲锋兵
-  ShortLabel: 冲
-  Description: 沿直线冲锋的敌军。
+  DisplayName: "\u51B2\u950B\u5175"
+  ShortLabel: "\u51B2"
+  Description: "\u6CBF\u76F4\u7EBF\u51B2\u950B\u7684\u654C\u519B\u3002"
   EntityKind: 1
   DefaultTeam: 1
   MaxHp: 5
@@ -27,5 +27,15 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 0
+    MoveRange: 0
+    MoveType: 0
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 0
   StartingStatusIds: []
   Tint: {r: 0.64705884, g: 0.5647059, b: 0.18039216, a: 1}
+  AuthoringVersion: 1

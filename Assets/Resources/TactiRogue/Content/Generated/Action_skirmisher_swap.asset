@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_skirmisher_swap
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: skirmisher_swap
-  DisplayName: 战术换位
-  Description: 与另一名单位交换位置。
+  DisplayName: "\u6218\u672F\u6362\u4F4D"
+  Description: "\u4E0E\u53E6\u4E00\u540D\u5355\u4F4D\u4EA4\u6362\u4F4D\u7F6E\u3002"
   ActionKind: 2
   TargetMode: 2
   TargetFilter: 4
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 1
+  AuthoringVersion: 1

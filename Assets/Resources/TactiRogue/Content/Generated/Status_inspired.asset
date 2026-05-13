@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Status_inspired
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
   Id: inspired
-  DisplayName: 鼓舞
-  Description: 攻击力 +1，持续到回合结束。
+  DisplayName: "\u9F13\u821E"
+  Description: "\u653B\u51FB\u529B +1\uFF0C\u6301\u7EED\u5230\u56DE\u5408\u7ED3\u675F\u3002"
   GrantedKeyword: 4
   AttackModifier: 1
   PushModifier: 0

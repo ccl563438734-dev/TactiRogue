@@ -58,6 +58,7 @@ namespace TactiRogue.Tests
             Assert.True(bootstrap.TryGetUnitCardIdleTiltAngle(entity.EntityId, out var idleTiltAngle));
             Assert.AreEqual(45f, idleTiltAngle, 0.01f);
             Assert.True(bootstrap.TryGetUnitPresentationHasStandardHierarchy(entity.EntityId));
+            Assert.True(bootstrap.TryGetUnitPresentationUsesModelPortrait(entity.EntityId));
         }
 
         [UnityTest]

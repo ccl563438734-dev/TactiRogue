@@ -1,35 +1,70 @@
 {
-  "Id": "mixed_intents",
-  "DisplayName": "Mixed Intents",
-  "Description": "Handle directional, area, and lock-on threats together.",
-  "DisplayOrder": 2,
-  "Width": 9,
-  "Height": 7,
-  "RandomSeed": 337,
-  "StartingMana": 3,
-  "MaxMana": 3,
-  "CardsPerTurn": 5,
-  "VoidCells": [],
-  "StartingDeck": [
-    "call_guardian",
-    "call_guardian",
-    "call_vanguard",
-    "call_skirmisher",
-    "call_slinger",
-    "call_banner",
-    "deploy_barricade",
-    "spell_forced_march",
-    "spell_command_shock",
-    "spell_fortify",
-    "spell_breakthrough"
-  ],
-  "Spawns": [
-    { "TemplateId": "commander_core", "Team": "Player", "X": 1, "Y": 3 },
-    { "TemplateId": "stone_pillar", "Team": "Neutral", "X": 4, "Y": 3 },
-    { "TemplateId": "stone_pillar", "Team": "Neutral", "X": 4, "Y": 5 },
-    { "TemplateId": "charger", "Team": "Enemy", "X": 7, "Y": 3 },
-    { "TemplateId": "bombardier", "Team": "Enemy", "X": 7, "Y": 5 },
-    { "TemplateId": "hunter", "Team": "Enemy", "X": 7, "Y": 1 },
-    { "TemplateId": "anchor_warden", "Team": "Enemy", "X": 7, "Y": 6 }
-  ]
+    "Id": "mixed_intents",
+    "DisplayName": "Mixed Intents",
+    "Description": "Handle directional, area, and lock-on threats together.",
+    "DisplayOrder": 2,
+    "Width": 9,
+    "Height": 7,
+    "RandomSeed": 337,
+    "StartingMana": 3,
+    "MaxMana": 3,
+    "CardsPerTurn": 5,
+    "VoidCells": [],
+    "StartingDeck": [
+        "call_guardian",
+        "call_guardian",
+        "call_vanguard",
+        "call_skirmisher",
+        "call_slinger",
+        "call_banner",
+        "deploy_barricade",
+        "spell_forced_march",
+        "spell_command_shock",
+        "spell_fortify",
+        "spell_breakthrough"
+    ],
+    "Spawns": [
+        {
+            "TemplateId": "commander_core",
+            "Team": "Player",
+            "X": 1,
+            "Y": 3
+        },
+        {
+            "TemplateId": "stone_pillar",
+            "Team": "Neutral",
+            "X": 4,
+            "Y": 3
+        },
+        {
+            "TemplateId": "stone_pillar",
+            "Team": "Neutral",
+            "X": 4,
+            "Y": 5
+        },
+        {
+            "TemplateId": "charger",
+            "Team": "Enemy",
+            "X": 7,
+            "Y": 3
+        },
+        {
+            "TemplateId": "bombardier",
+            "Team": "Enemy",
+            "X": 7,
+            "Y": 5
+        },
+        {
+            "TemplateId": "hunter",
+            "Team": "Enemy",
+            "X": 7,
+            "Y": 1
+        },
+        {
+            "TemplateId": "anchor_warden",
+            "Team": "Enemy",
+            "X": 7,
+            "Y": 6
+        }
+    ]
 }

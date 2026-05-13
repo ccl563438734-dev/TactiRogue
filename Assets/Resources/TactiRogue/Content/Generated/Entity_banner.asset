@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_banner
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: banner
-  DisplayName: 旗手
-  ShortLabel: 旗
-  Description: 提供额外行动并施加鼓舞。
+  DisplayName: "\u65D7\u624B"
+  ShortLabel: "\u65D7"
+  Description: "\u63D0\u4F9B\u989D\u5916\u884C\u52A8\u5E76\u65BD\u52A0\u9F13\u821E\u3002"
   EntityKind: 1
   DefaultTeam: 0
   MaxHp: 4
@@ -27,5 +27,15 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 2
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds: []
   Tint: {r: 0.8117647, g: 0.6117647, b: 0.25882354, a: 1}
+  AuthoringVersion: 1

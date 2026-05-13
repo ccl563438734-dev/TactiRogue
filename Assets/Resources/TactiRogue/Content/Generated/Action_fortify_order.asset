@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_fortify_order
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: fortify_order
-  DisplayName: 固守号令
-  Description: 治疗 1 点生命，并施加嘲讽。
+  DisplayName: "\u56FA\u5B88\u53F7\u4EE4"
+  Description: "\u6CBB\u7597 1 \u70B9\u751F\u547D\uFF0C\u5E76\u65BD\u52A0\u5632\u8BBD\u3002"
   ActionKind: 4
   TargetMode: 2
   TargetFilter: 2
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_call_banner
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
   Id: call_banner
-  DisplayName: 召唤旗手
-  Description: 在 1 格范围内部署一名旗手。
+  DisplayName: "\u53EC\u5524\u65D7\u624B"
+  Description: "\u5728 1 \u683C\u8303\u56F4\u5185\u90E8\u7F72\u4E00\u540D\u65D7\u624B\u3002"
   CardKind: 0
   Cost: 1
   ActionId: 

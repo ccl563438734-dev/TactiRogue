@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Intent_bombard_lock
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:IntentDefinition
   Id: bombard_lock
-  DisplayName: 轰炸
-  Description: 为下个敌方回合标记一片冲击区域。
+  DisplayName: "\u8F70\u70B8"
+  Description: "\u4E3A\u4E0B\u4E2A\u654C\u65B9\u56DE\u5408\u6807\u8BB0\u4E00\u7247\u51B2\u51FB\u533A\u57DF\u3002"
   IntentKind: 1
   ActionId: bombardier_bomb
   AcquireRange: 99

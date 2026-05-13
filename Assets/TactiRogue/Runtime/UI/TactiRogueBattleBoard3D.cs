@@ -149,6 +149,11 @@ namespace TactiRogue
                    && _presentation.GetSocket(UnitSocketType.Selection) != null;
         }
 
+        public bool UsesModelPortrait()
+        {
+            return _presentation.UsesModelPortrait();
+        }
+
         private void PlayMotion(MotionDefinitionCategory category, MotionRuntimeContext context, bool resetBefore, Action onComplete)
         {
             if (category == MotionDefinitionCategory.Death)
@@ -418,6 +423,11 @@ namespace TactiRogue
         public bool TryGetUnitPresentationHasStandardHierarchy(int entityId)
         {
             return _unitViews.TryGetValue(entityId, out var view) && view.HasStandardPresentationHierarchy();
+        }
+
+        public bool TryGetUnitPresentationUsesModelPortrait(int entityId)
+        {
+            return _unitViews.TryGetValue(entityId, out var view) && view.UsesModelPortrait();
         }
 
         public Vector3 GridToWorld(GridPosition position)

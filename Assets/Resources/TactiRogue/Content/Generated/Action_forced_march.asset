@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_forced_march
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: forced_march
-  DisplayName: 强行军
-  Description: 令一名友军获得 1 个额外行动。
+  DisplayName: "\u5F3A\u884C\u519B"
+  Description: "\u4EE4\u4E00\u540D\u53CB\u519B\u83B7\u5F97 1 \u4E2A\u989D\u5916\u884C\u52A8\u3002"
   ActionKind: 3
   TargetMode: 2
   TargetFilter: 2
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

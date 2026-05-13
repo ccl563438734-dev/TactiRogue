@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_skirmisher
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: skirmisher
-  DisplayName: 散兵
-  ShortLabel: 散
-  Description: 通过换位来调整站位。
+  DisplayName: "\u6563\u5175"
+  ShortLabel: "\u6563"
+  Description: "\u901A\u8FC7\u6362\u4F4D\u6765\u8C03\u6574\u7AD9\u4F4D\u3002"
   EntityKind: 1
   DefaultTeam: 0
   MaxHp: 3
@@ -27,5 +27,15 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 0
+    MoveRange: 0
+    MoveType: 0
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 0
   StartingStatusIds: []
   Tint: {r: 0.29803923, g: 0.48235294, b: 0.7607843, a: 1}
+  AuthoringVersion: 1

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_bombardier
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: bombardier
-  DisplayName: "\u8F70\u70B8\u5175"
-  ShortLabel: "\u8F70"
-  Description: "\u5236\u9020\u533A\u57DF\u538B\u529B\u7684\u654C\u519B\u3002"
+  DisplayName: '"\u8F70\u70B8\u5175"'
+  ShortLabel: '"\u8F70"'
+  Description: '"\u5236\u9020\u533A\u57DF\u538B\u529B\u7684\u654C\u519B\u3002"'
   EntityKind: 1
   DefaultTeam: 1
   MaxHp: 4
@@ -38,3 +38,4 @@ MonoBehaviour:
     RequirePath: 1
   StartingStatusIds: []
   Tint: {r: 0.6901961, g: 0.47843137, b: 0.1882353, a: 1}
+  AuthoringVersion: 1

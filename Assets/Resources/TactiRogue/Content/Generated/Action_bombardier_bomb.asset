@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_bombardier_bomb
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: bombardier_bomb
-  DisplayName: 轰炸
-  Description: 标记并伤害一小片区域。
+  DisplayName: "\u8F70\u70B8"
+  Description: "\u6807\u8BB0\u5E76\u4F24\u5BB3\u4E00\u5C0F\u7247\u533A\u57DF\u3002"
   ActionKind: 6
   TargetMode: 1
   TargetFilter: 0
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

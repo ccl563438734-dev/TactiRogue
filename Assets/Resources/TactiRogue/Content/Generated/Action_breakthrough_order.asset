@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Action_breakthrough_order
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: breakthrough_order
-  DisplayName: 突破号令
-  Description: 施加持续 2 回合的突破。
+  DisplayName: "\u7A81\u7834\u53F7\u4EE4"
+  Description: "\u65BD\u52A0\u6301\u7EED 2 \u56DE\u5408\u7684\u7A81\u7834\u3002"
   ActionKind: 4
   TargetMode: 2
   TargetFilter: 2
@@ -34,3 +34,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

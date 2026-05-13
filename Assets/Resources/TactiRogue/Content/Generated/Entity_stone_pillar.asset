@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_stone_pillar
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: stone_pillar
-  DisplayName: 石柱
-  ShortLabel: 柱
-  Description: 稳定的碰撞物。
+  DisplayName: "\u77F3\u67F1"
+  ShortLabel: "\u67F1"
+  Description: "\u7A33\u5B9A\u7684\u78B0\u649E\u7269\u3002"
   EntityKind: 2
   DefaultTeam: 2
   MaxHp: 99
@@ -27,6 +27,16 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 0
+    MoveRange: 0
+    MoveType: 0
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 0
   StartingStatusIds:
   - anchored
   Tint: {r: 0.4392157, g: 0.4392157, b: 0.4392157, a: 1}
+  AuthoringVersion: 1

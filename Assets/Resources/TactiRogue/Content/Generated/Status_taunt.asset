@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Status_taunt
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
   Id: taunt
-  DisplayName: 嘲讽
-  Description: 保护附近友军免受敌方指向性意图锁定。
+  DisplayName: "\u5632\u8BBD"
+  Description: "\u4FDD\u62A4\u9644\u8FD1\u53CB\u519B\u514D\u53D7\u654C\u65B9\u6307\u5411\u6027\u610F\u56FE\u9501\u5B9A\u3002"
   GrantedKeyword: 1
   AttackModifier: 0
   PushModifier: 0

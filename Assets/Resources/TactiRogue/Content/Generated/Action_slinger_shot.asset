@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Action_slinger_shot
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
   Id: slinger_shot
-  DisplayName: 震击投石
-  Description: 远程攻击，并将目标击退 1 格。
+  DisplayName: "\u9707\u51FB\u6295\u77F3"
+  Description: "\u8FDC\u7A0B\u653B\u51FB\uFF0C\u5E76\u5C06\u76EE\u6807\u51FB\u9000
+    1 \u683C\u3002"
   ActionKind: 1
   TargetMode: 2
   TargetFilter: 3
@@ -34,3 +35,5 @@ MonoBehaviour:
   SummonEntityId: 
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
+  SkipMovePhase: 0
+  AuthoringVersion: 1

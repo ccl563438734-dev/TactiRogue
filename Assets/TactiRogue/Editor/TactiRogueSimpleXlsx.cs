@@ -77,7 +77,7 @@ namespace TactiRogue
                         continue;
                     }
 
-                    var worksheetEntry = GetRequiredEntry(archive, $"xl/{target.TrimStart('/')}");
+                    var worksheetEntry = GetRequiredEntry(archive, target);
                     var worksheetDocument = LoadDocument(worksheetEntry);
                     workbook.Sheets.Add(ParseSheet(name, worksheetDocument, sharedStrings));
                 }
@@ -225,11 +225,19 @@ namespace TactiRogue
                 var target = (string)relationship.Attribute("Target");
                 if (!string.IsNullOrWhiteSpace(id) && !string.IsNullOrWhiteSpace(target))
                 {
-                    relationships[id] = target.Replace("\\", "/");
+                    relationships[id] = NormalizeWorkbookRelationshipTarget(target);
                 }
             }
 
             return relationships;
+        }
+
+        private static string NormalizeWorkbookRelationshipTarget(string target)
+        {
+            var normalized = (target ?? string.Empty).Replace("\\", "/").TrimStart('/');
+            return normalized.StartsWith("xl/", StringComparison.OrdinalIgnoreCase)
+                ? normalized
+                : $"xl/{normalized}";
         }
 
         private static XDocument BuildContentTypesDocument(TactiRogueExcelWorkbook workbook)

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_barricade
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: barricade
-  DisplayName: 路障
-  ShortLabel: 障
-  Description: 可召唤的临时阻挡物。
+  DisplayName: "\u8DEF\u969C"
+  ShortLabel: "\u969C"
+  Description: "\u53EF\u53EC\u5524\u7684\u4E34\u65F6\u963B\u6321\u7269\u3002"
   EntityKind: 2
   DefaultTeam: 0
   MaxHp: 4
@@ -27,6 +27,16 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 0
+    MoveRange: 0
+    MoveType: 0
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 0
   StartingStatusIds:
   - anchored
   Tint: {r: 0.5137255, g: 0.39215687, b: 0.27058825, a: 1}
+  AuthoringVersion: 1

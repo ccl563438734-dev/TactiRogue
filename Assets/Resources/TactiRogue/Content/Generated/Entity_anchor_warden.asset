@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_anchor_warden
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: anchor_warden
-  DisplayName: 锚卫
-  ShortLabel: 锚
-  Description: 带有锚定的远程威胁。
+  DisplayName: "\u951A\u536B"
+  ShortLabel: "\u951A"
+  Description: "\u5E26\u6709\u951A\u5B9A\u7684\u8FDC\u7A0B\u5A01\u80C1\u3002"
   EntityKind: 1
   DefaultTeam: 1
   MaxHp: 6
@@ -27,6 +27,16 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 0
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds:
   - anchored
   Tint: {r: 0.46666667, g: 0.35686275, b: 0.68235296, a: 1}
+  AuthoringVersion: 1

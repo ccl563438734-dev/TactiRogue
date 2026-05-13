@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_slinger
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: slinger
-  DisplayName: 投石手
-  ShortLabel: 石
-  Description: 远程骚扰并击退敌人。
+  DisplayName: "\u6295\u77F3\u624B"
+  ShortLabel: "\u77F3"
+  Description: "\u8FDC\u7A0B\u9A9A\u6270\u5E76\u51FB\u9000\u654C\u4EBA\u3002"
   EntityKind: 1
   DefaultTeam: 0
   MaxHp: 3
@@ -27,5 +27,15 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 2
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds: []
   Tint: {r: 0.5529412, g: 0.3372549, b: 0.7490196, a: 1}
+  AuthoringVersion: 1

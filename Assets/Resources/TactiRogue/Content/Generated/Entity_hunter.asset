@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Entity_hunter
   m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
   Id: hunter
-  DisplayName: 猎手
-  ShortLabel: 猎
-  Description: 追击单体目标的攻击手。
+  DisplayName: "\u730E\u624B"
+  ShortLabel: "\u730E"
+  Description: "\u8FFD\u51FB\u5355\u4F53\u76EE\u6807\u7684\u653B\u51FB\u624B\u3002"
   EntityKind: 1
   DefaultTeam: 1
   MaxHp: 4
@@ -27,5 +27,15 @@ MonoBehaviour:
   BlocksMovement: 1
   OccupiesCell: 1
   Targetable: 1
+  MoveProfile:
+    UseSeparateMovePhase: 1
+    MoveRange: 2
+    MoveType: 1
+    AllowStayInPlace: 1
+    AllowDiagonalMove: 1
+    CanPassThroughUnits: 0
+    CanPassThroughBuildings: 0
+    RequirePath: 1
   StartingStatusIds: []
   Tint: {r: 0.6509804, g: 0.30980393, b: 0.30980393, a: 1}
+  AuthoringVersion: 1
