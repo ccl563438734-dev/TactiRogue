@@ -9,14 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d6c8c3ffbc5f7fc4caae0013ed5d5724, type: 3}
   m_Name: CardPieceVisual_slinger
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardPieceVisualDefinition
+  m_EditorClassIdentifier: 
   Id: slinger
   ModelKey: Assert/Model/sample
   CardArtKey: "Assert/Picture/\u6295\u77F3\u624B"
   BackArtKey: "Assert/Picture/\u5361\u80CC"
   IdleTiltAngle: 90
+  DefaultRotationEuler: {x: 0, y: 0, z: 0}
   DefaultScale: 1
   YOffset: 0.05
   FrameModelKey: Assert/Model/F_Unit

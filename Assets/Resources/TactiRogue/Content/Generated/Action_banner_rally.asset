@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b3a92d2df464be44ba5a2d85398a5ede, type: 3}
   m_Name: Action_banner_rally
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  m_EditorClassIdentifier: 
   Id: banner_rally
   DisplayName: "\u6218\u65D7\u53F7\u4EE4"
   Description: "\u4EE4\u4E00\u540D\u53CB\u519B\u83B7\u5F97 1 \u4E2A\u989D\u5916\u884C\u52A8\u5E76\u65BD\u52A0\u9F13\u821E\u3002"

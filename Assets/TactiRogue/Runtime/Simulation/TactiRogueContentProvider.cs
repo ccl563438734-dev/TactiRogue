@@ -120,6 +120,7 @@ namespace TactiRogue
 
             EnsureCommanderAction(database);
             EnsureDefaultCardPieceVisuals(database);
+            ApplyBoardVisualDefaults(database);
             ApplyCardPieceVisualDefaults(database);
 
             foreach (var action in database.ActionDefinitions.Where(item => item != null))
@@ -192,6 +193,30 @@ namespace TactiRogue
                 {
                     visual.DefaultScale = 1f;
                 }
+            }
+        }
+
+        private static void ApplyBoardVisualDefaults(TactiRogueContentDatabase database)
+        {
+            if (database.BoardCellSize <= 0f)
+            {
+                database.BoardCellSize = TactiRogueContentDatabase.DefaultBoardCellSize;
+            }
+
+            if (database.BoardCellGap < 0f)
+            {
+                database.BoardCellGap = 0f;
+            }
+
+            var maxGap = Mathf.Max(0f, database.BoardCellSize - 0.01f);
+            if (database.BoardCellGap > maxGap)
+            {
+                database.BoardCellGap = maxGap;
+            }
+
+            if (database.BoardCellHeight <= 0f)
+            {
+                database.BoardCellHeight = TactiRogueContentDatabase.DefaultBoardCellHeight;
             }
         }
 
@@ -525,6 +550,7 @@ namespace TactiRogue
             visual.CardArtKey = cardArtKey;
             visual.BackArtKey = "Assert/Picture/卡背";
             visual.IdleTiltAngle = 45f;
+            visual.DefaultRotationEuler = UnitPresentationView.DefaultRotationFromIdleTilt(visual.IdleTiltAngle);
             visual.DefaultScale = 1f;
             visual.YOffset = 0.05f;
             visual.FrameModelKey = GetDefaultFrameModelKey(id);

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 327d8a2bf1b4dfc438bb99549c8ab644, type: 3}
   m_Name: Intent_charge_line
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:IntentDefinition
+  m_EditorClassIdentifier: 
   Id: charge_line
   DisplayName: "\u51B2\u950B"
   Description: "\u6CBF\u56FA\u5B9A\u65B9\u5411\u7A81\u8FDB\u3002"

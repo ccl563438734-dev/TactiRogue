@@ -108,6 +108,7 @@ namespace TactiRogue
 
     public sealed class TactiRogueExcelWorkbookData
     {
+        public List<BoardVisualRow> BoardVisualRows { get; } = new List<BoardVisualRow>();
         public List<StatusRow> StatusRows { get; } = new List<StatusRow>();
         public List<ActionRow> ActionRows { get; } = new List<ActionRow>();
         public List<MoveProfileRow> MoveProfileRows { get; } = new List<MoveProfileRow>();
@@ -124,6 +125,7 @@ namespace TactiRogue
         public TactiRogueExcelWorkbook ToWorkbook()
         {
             var workbook = new TactiRogueExcelWorkbook();
+            workbook.Sheets.Add(CreateSheet("BoardVisual", BoardVisualRow.Headers, BoardVisualRows.Select(row => row.ToCells())));
             workbook.Sheets.Add(CreateSheet("Status", StatusRow.Headers, StatusRows.Select(row => row.ToCells())));
             workbook.Sheets.Add(CreateSheet("Action", ActionRow.Headers, ActionRows.Select(row => row.ToCells())));
             workbook.Sheets.Add(CreateSheet("MoveProfile", MoveProfileRow.Headers, MoveProfileRows.Select(row => row.ToCells())));
@@ -156,6 +158,43 @@ namespace TactiRogue
     {
         public TactiRogueContentDatabase Database;
         public List<ScenarioDefinition> Scenarios = new List<ScenarioDefinition>();
+    }
+
+    public sealed class BoardVisualRow
+    {
+        public const string DefaultId = "default";
+
+        public static readonly string[] Headers =
+        {
+            "Id", "CellSize", "CellGap", "CellHeight",
+        };
+
+        public string Id;
+        public float CellSize;
+        public float CellGap;
+        public float CellHeight;
+
+        public static BoardVisualRow CreateDefault()
+        {
+            return new BoardVisualRow
+            {
+                Id = DefaultId,
+                CellSize = TactiRogueContentDatabase.DefaultBoardCellSize,
+                CellGap = TactiRogueContentDatabase.DefaultBoardCellGap,
+                CellHeight = TactiRogueContentDatabase.DefaultBoardCellHeight,
+            };
+        }
+
+        public string[] ToCells()
+        {
+            return new[]
+            {
+                Id,
+                CellSize.ToString(CultureInfo.InvariantCulture),
+                CellGap.ToString(CultureInfo.InvariantCulture),
+                CellHeight.ToString(CultureInfo.InvariantCulture),
+            };
+        }
     }
 
     public sealed class StatusRow
@@ -446,7 +485,8 @@ namespace TactiRogue
     {
         public static readonly string[] Headers =
         {
-            "Id", "ModelKey", "CardArtKey", "BackArtKey", "IdleTiltAngle", "DefaultScale", "YOffset",
+            "Id", "ModelKey", "CardArtKey", "BackArtKey", "IdleTiltAngle",
+            "DefaultRotationX", "DefaultRotationY", "DefaultRotationZ", "DefaultScale", "YOffset",
             "FrameModelKey", "FrameMaterialKey", "IdleMotionKey", "MoveMotionKey", "AttackMotionKey",
             "HitMotionKey", "DeathMotionKey", "SpawnMotionKey",
         };
@@ -461,6 +501,9 @@ namespace TactiRogue
         public string CardArtKey;
         public string BackArtKey;
         public float IdleTiltAngle;
+        public float DefaultRotationX;
+        public float DefaultRotationY;
+        public float DefaultRotationZ;
         public float DefaultScale;
         public float YOffset;
         public string FrameModelKey;
@@ -481,6 +524,9 @@ namespace TactiRogue
                 CardArtKey,
                 BackArtKey,
                 IdleTiltAngle.ToString(CultureInfo.InvariantCulture),
+                DefaultRotationX.ToString(CultureInfo.InvariantCulture),
+                DefaultRotationY.ToString(CultureInfo.InvariantCulture),
+                DefaultRotationZ.ToString(CultureInfo.InvariantCulture),
                 DefaultScale.ToString(CultureInfo.InvariantCulture),
                 YOffset.ToString(CultureInfo.InvariantCulture),
                 FrameModelKey,
@@ -654,6 +700,14 @@ namespace TactiRogue
             var scenarios = TactiRogueScenarioRepository.LoadAll();
             var workbookData = new TactiRogueExcelWorkbookData();
 
+            workbookData.BoardVisualRows.Add(new BoardVisualRow
+            {
+                Id = BoardVisualRow.DefaultId,
+                CellSize = database.GetBoardCellSize(),
+                CellGap = database.GetBoardCellGap(),
+                CellHeight = database.GetBoardCellHeight(),
+            });
+
             foreach (var status in database.StatusTemplates.Where(item => item != null))
             {
                 workbookData.StatusRows.Add(new StatusRow
@@ -794,6 +848,9 @@ namespace TactiRogue
                     CardArtKey = visual.CardArtKey,
                     BackArtKey = visual.BackArtKey,
                     IdleTiltAngle = visual.IdleTiltAngle,
+                    DefaultRotationX = visual.DefaultRotationEuler.x,
+                    DefaultRotationY = visual.DefaultRotationEuler.y,
+                    DefaultRotationZ = visual.DefaultRotationEuler.z,
                     DefaultScale = visual.DefaultScale,
                     YOffset = visual.YOffset,
                     FrameModelKey = visual.FrameModelKey,
@@ -921,6 +978,10 @@ namespace TactiRogue
                 { "ScenarioDeck", ScenarioDeckRow.Headers },
                 { "ScenarioVoidCell", ScenarioVoidCellRow.Headers },
             };
+            var optionalSheets = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
+            {
+                { "BoardVisual", BoardVisualRow.Headers },
+            };
 
             var accessors = new Dictionary<string, SheetAccessor>(StringComparer.Ordinal);
             foreach (var pair in requiredSheets)
@@ -936,12 +997,33 @@ namespace TactiRogue
                 accessor.ValidateCells(report);
             }
 
+            foreach (var pair in optionalSheets)
+            {
+                if (!sheets.TryGetValue(pair.Key, out var sheet))
+                {
+                    continue;
+                }
+
+                var accessor = new SheetAccessor(sheet, pair.Value, report);
+                accessors[pair.Key] = accessor;
+                accessor.ValidateCells(report);
+            }
+
             if (!report.IsValid)
             {
                 return false;
             }
 
             workbookData = new TactiRogueExcelWorkbookData();
+            if (accessors.TryGetValue("BoardVisual", out var boardVisualAccessor))
+            {
+                ParseRows(boardVisualAccessor, workbookData.BoardVisualRows, ParseBoardVisualRow, report);
+            }
+            else
+            {
+                workbookData.BoardVisualRows.Add(BoardVisualRow.CreateDefault());
+            }
+
             ParseRows(accessors["Status"], workbookData.StatusRows, ParseStatusRow, report);
             ParseRows(accessors["Action"], workbookData.ActionRows, ParseActionRow, report);
             ParseRows(accessors["MoveProfile"], workbookData.MoveProfileRows, ParseMoveProfileRow, report);
@@ -974,6 +1056,7 @@ namespace TactiRogue
                 return;
             }
 
+            ValidateBoardVisualRows(workbookData.BoardVisualRows, report);
             ValidateDuplicates(workbookData.StatusRows, row => row.Id, "Status", report);
             ValidateDuplicates(workbookData.ActionRows, row => row.Id, "Action", report);
             ValidateDuplicates(workbookData.MoveProfileRows, row => row.Id, "MoveProfile", report);
@@ -1041,6 +1124,43 @@ namespace TactiRogue
             foreach (var row in workbookData.ScenarioVoidCellRows)
             {
                 ValidateRequiredReference("ScenarioVoidCell", $"{row.ScenarioId}:{row.Order}", "ScenarioId", row.ScenarioId, scenarioIds, report);
+            }
+        }
+
+        private static void ValidateBoardVisualRows(IReadOnlyList<BoardVisualRow> rows, TactiRogueExcelValidationReport report)
+        {
+            if (rows.Count == 0)
+            {
+                report.AddError("Sheet 'BoardVisual' requires exactly one settings row.");
+                return;
+            }
+
+            if (rows.Count > 1)
+            {
+                report.AddError("Sheet 'BoardVisual' supports exactly one settings row.");
+            }
+
+            ValidateDuplicates(rows, row => row.Id, "BoardVisual", report);
+            var row = rows[0];
+            var rowId = string.IsNullOrWhiteSpace(row.Id) ? BoardVisualRow.DefaultId : row.Id;
+            if (row.CellSize <= 0f)
+            {
+                report.AddError($"Sheet 'BoardVisual' row '{rowId}' requires CellSize > 0.");
+            }
+
+            if (row.CellGap < 0f)
+            {
+                report.AddError($"Sheet 'BoardVisual' row '{rowId}' requires CellGap >= 0.");
+            }
+
+            if (row.CellGap >= row.CellSize)
+            {
+                report.AddError($"Sheet 'BoardVisual' row '{rowId}' requires CellGap smaller than CellSize.");
+            }
+
+            if (row.CellHeight <= 0f)
+            {
+                report.AddError($"Sheet 'BoardVisual' row '{rowId}' requires CellHeight > 0.");
             }
         }
 
@@ -1307,6 +1427,14 @@ namespace TactiRogue
                 return null;
             }
 
+            var defaultRotation = UnitPresentationView.DefaultRotationFromIdleTilt(idleTiltAngle);
+            if (!TryReadOptionalFloat(row, "DefaultRotationX", defaultRotation.x, report, out var defaultRotationX)
+                || !TryReadOptionalFloat(row, "DefaultRotationY", defaultRotation.y, report, out var defaultRotationY)
+                || !TryReadOptionalFloat(row, "DefaultRotationZ", defaultRotation.z, report, out var defaultRotationZ))
+            {
+                return null;
+            }
+
             return new CardPieceVisualRow
             {
                 Id = id,
@@ -1314,6 +1442,9 @@ namespace TactiRogue
                 CardArtKey = cardArtKey,
                 BackArtKey = backArtKey,
                 IdleTiltAngle = idleTiltAngle,
+                DefaultRotationX = defaultRotationX,
+                DefaultRotationY = defaultRotationY,
+                DefaultRotationZ = defaultRotationZ,
                 DefaultScale = defaultScale,
                 YOffset = yOffset,
                 FrameModelKey = row.Get("FrameModelKey"),
@@ -1452,6 +1583,24 @@ namespace TactiRogue
             return false;
         }
 
+        private static bool TryReadOptionalFloat(RowAccessor row, string columnName, float defaultValue, TactiRogueExcelValidationReport report, out float value)
+        {
+            var raw = row.Get(columnName)?.Trim();
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                value = defaultValue;
+                return true;
+            }
+
+            if (float.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            {
+                return true;
+            }
+
+            report.AddError($"{row.Location}: '{columnName}' must be a number, got '{raw}'.");
+            return false;
+        }
+
         private static bool TryReadBool(RowAccessor row, string columnName, TactiRogueExcelValidationReport report, out bool value)
         {
             var raw = row.Get(columnName)?.Trim();
@@ -1539,6 +1688,25 @@ namespace TactiRogue
             {
                 report.AddError($"Sheet '{sheetName}' row '{rowId}' references missing {fieldName} '{value}'.");
             }
+        }
+
+        private static BoardVisualRow ParseBoardVisualRow(RowAccessor row, TactiRogueExcelValidationReport report)
+        {
+            if (!TryReadRequiredString(row, "Id", report, out var id)
+                || !TryReadFloat(row, "CellSize", report, out var cellSize)
+                || !TryReadFloat(row, "CellGap", report, out var cellGap)
+                || !TryReadFloat(row, "CellHeight", report, out var cellHeight))
+            {
+                return null;
+            }
+
+            return new BoardVisualRow
+            {
+                Id = id,
+                CellSize = cellSize,
+                CellGap = cellGap,
+                CellHeight = cellHeight,
+            };
         }
 
         private sealed class SheetAccessor
@@ -1701,6 +1869,10 @@ namespace TactiRogue
 
             var database = ScriptableObject.CreateInstance<TactiRogueContentDatabase>();
             database.name = "TactiRogueContentDatabase";
+            var boardVisual = workbookData.BoardVisualRows.FirstOrDefault() ?? BoardVisualRow.CreateDefault();
+            database.BoardCellSize = boardVisual.CellSize;
+            database.BoardCellGap = boardVisual.CellGap;
+            database.BoardCellHeight = boardVisual.CellHeight;
             database.StatusTemplates = workbookData.StatusRows.Select(CreateStatusAsset).ToArray();
             database.ActionDefinitions = workbookData.ActionRows.Select(CreateActionAsset).ToArray();
             database.EntityTemplates = workbookData.EntityRows.Select(row => CreateEntityAsset(row, moveProfiles, entityStatuses)).ToArray();
@@ -1899,6 +2071,7 @@ namespace TactiRogue
             asset.CardArtKey = row.CardArtKey;
             asset.BackArtKey = row.BackArtKey;
             asset.IdleTiltAngle = row.IdleTiltAngle;
+            asset.DefaultRotationEuler = new Vector3(row.DefaultRotationX, row.DefaultRotationY, row.DefaultRotationZ);
             asset.DefaultScale = row.DefaultScale;
             asset.YOffset = row.YOffset;
             asset.FrameModelKey = row.FrameModelKey;

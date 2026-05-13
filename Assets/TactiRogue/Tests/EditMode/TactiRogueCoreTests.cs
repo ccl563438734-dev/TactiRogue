@@ -517,6 +517,7 @@ namespace TactiRogue.Tests
             Assert.AreEqual("Assert/Picture/守卫", guardianVisual.CardArtKey);
             Assert.AreEqual("Assert/Picture/卡背", guardianVisual.BackArtKey);
             Assert.AreEqual(45f, guardianVisual.IdleTiltAngle);
+            Assert.AreEqual(new Vector3(-45f, 0f, 0f), guardianVisual.DefaultRotationEuler);
         }
 
         [Test]
@@ -617,6 +618,25 @@ namespace TactiRogue.Tests
         }
 
         [Test]
+        public void UnitPresentationViewDefaultPoseUsesConfiguredEulerRotation()
+        {
+            var parent = new GameObject("PresentationRotationTestParent");
+            try
+            {
+                var view = UnitPresentationView.CreateGenerated(1000, parent.transform);
+                var expectedRotation = new Vector3(10f, 20f, 30f);
+
+                view.ConfigureDefaultPose(expectedRotation, 1f);
+
+                Assert.Less(Quaternion.Angle(Quaternion.Euler(expectedRotation), view.RotationRoot.localRotation), 0.01f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(parent);
+            }
+        }
+
+        [Test]
         public void ExcelExportRoundTripBuildsEquivalentContent()
         {
             var workbookPath = Path.Combine(Path.GetTempPath(), "TactiRogue_excel_roundtrip.xlsx");
@@ -647,7 +667,8 @@ namespace TactiRogue.Tests
             Assert.AreEqual(currentDatabase.GetIntent("hunter_lock").TargetingMode, bundle.Database.GetIntent("hunter_lock").TargetingMode);
             Assert.AreEqual(currentDatabase.GetCardPieceVisual("guardian").CardArtKey, bundle.Database.GetCardPieceVisual("guardian").CardArtKey);
             Assert.AreEqual(currentDatabase.GetCardPieceVisual("guardian").FrameModelKey, bundle.Database.GetCardPieceVisual("guardian").FrameModelKey);
-            Assert.AreEqual(45f, bundle.Database.GetCardPieceVisual("guardian").IdleTiltAngle);
+            Assert.AreEqual(currentDatabase.GetCardPieceVisual("guardian").IdleTiltAngle, bundle.Database.GetCardPieceVisual("guardian").IdleTiltAngle);
+            Assert.AreEqual(currentDatabase.GetCardPieceVisual("guardian").DefaultRotationEuler, bundle.Database.GetCardPieceVisual("guardian").DefaultRotationEuler);
 
             CollectionAssert.AreEqual(currentScenarios.Select(item => item.Id).ToArray(), bundle.Scenarios.Select(item => item.Id).ToArray());
             CollectionAssert.AreEqual(
@@ -698,6 +719,9 @@ namespace TactiRogue.Tests
                 CardArtKey = guardianVisual.CardArtKey,
                 BackArtKey = guardianVisual.BackArtKey,
                 IdleTiltAngle = guardianVisual.IdleTiltAngle,
+                DefaultRotationX = guardianVisual.DefaultRotationX,
+                DefaultRotationY = guardianVisual.DefaultRotationY,
+                DefaultRotationZ = guardianVisual.DefaultRotationZ,
                 DefaultScale = guardianVisual.DefaultScale,
                 YOffset = guardianVisual.YOffset,
             });

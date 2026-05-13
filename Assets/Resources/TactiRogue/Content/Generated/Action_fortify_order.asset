@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b3a92d2df464be44ba5a2d85398a5ede, type: 3}
   m_Name: Action_fortify_order
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  m_EditorClassIdentifier: 
   Id: fortify_order
   DisplayName: "\u56FA\u5B88\u53F7\u4EE4"
   Description: "\u6CBB\u7597 1 \u70B9\u751F\u547D\uFF0C\u5E76\u65BD\u52A0\u5632\u8BBD\u3002"

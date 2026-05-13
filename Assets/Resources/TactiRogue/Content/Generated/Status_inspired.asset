@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 3727f9cfc73ab0d40b750afbc15fca4c, type: 3}
   m_Name: Status_inspired
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
+  m_EditorClassIdentifier: 
   Id: inspired
   DisplayName: "\u9F13\u821E"
   Description: "\u653B\u51FB\u529B +1\uFF0C\u6301\u7EED\u5230\u56DE\u5408\u7ED3\u675F\u3002"

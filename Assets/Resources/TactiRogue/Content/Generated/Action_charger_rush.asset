@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b3a92d2df464be44ba5a2d85398a5ede, type: 3}
   m_Name: Action_charger_rush
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  m_EditorClassIdentifier: 
   Id: charger_rush
   DisplayName: "\u76F4\u7EBF\u51B2\u950B"
   Description: "\u5411\u524D\u51B2\u950B\uFF0C\u5E76\u731B\u51FB\u547D\u4E2D\u7684\u7B2C\u4E00\u4E2A\u76EE\u6807\u3002"

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 44a1f8a7cf330d546b65d0a80e84b595, type: 3}
   m_Name: Card_call_vanguard
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
+  m_EditorClassIdentifier: 
   Id: call_vanguard
   DisplayName: "\u53EC\u5524\u5148\u950B"
   Description: "\u5728 2 \u683C\u8303\u56F4\u5185\u90E8\u7F72\u4E00\u540D\u5148\u950B\u3002"

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2681725cbbf26a84c9497f27e813047b, type: 3}
   m_Name: Entity_bombardier
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
+  m_EditorClassIdentifier: 
   Id: bombardier
   DisplayName: '"\u8F70\u70B8\u5175"'
   ShortLabel: '"\u8F70"'

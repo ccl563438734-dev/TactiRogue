@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 2681725cbbf26a84c9497f27e813047b, type: 3}
   m_Name: Entity_slinger
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:EntityTemplate
+  m_EditorClassIdentifier: 
   Id: slinger
   DisplayName: "\u6295\u77F3\u624B"
   ShortLabel: "\u77F3"

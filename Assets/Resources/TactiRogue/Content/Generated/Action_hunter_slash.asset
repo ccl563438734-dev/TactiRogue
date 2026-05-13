@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b3a92d2df464be44ba5a2d85398a5ede, type: 3}
   m_Name: Action_hunter_slash
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:ActionDefinition
+  m_EditorClassIdentifier: 
   Id: hunter_slash
   DisplayName: "\u8FFD\u730E\u65A9\u51FB"
   Description: "\u5148\u8D70\u5165\u653B\u51FB\u8303\u56F4\uFF0C\u518D\u53D1\u52A8\u6253\u51FB\u5E76\u51FB\u9000\u3002"

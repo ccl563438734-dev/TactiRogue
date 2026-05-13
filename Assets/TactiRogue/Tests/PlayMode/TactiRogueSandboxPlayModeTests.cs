@@ -48,15 +48,18 @@ namespace TactiRogue.Tests
                 .Where(item => item.OccupiesCell)
                 .OrderBy(item => item.EntityId)
                 .First();
+            var cellSize = bootstrap.Engine.Catalog.GetBoardCellSize();
             var expectedPosition = new Vector3(
-                -((bootstrap.State.Grid.Width - 1) * 0.5f) + entity.Position.X,
+                -((bootstrap.State.Grid.Width - 1) * cellSize * 0.5f) + entity.Position.X * cellSize,
                 0.05f,
-                -((bootstrap.State.Grid.Height - 1) * 0.5f) + entity.Position.Y);
+                -((bootstrap.State.Grid.Height - 1) * cellSize * 0.5f) + entity.Position.Y * cellSize);
 
             Assert.True(bootstrap.TryGetUnitCardWorldPosition(entity.EntityId, out var worldPosition));
             Assert.Less(Vector3.Distance(expectedPosition, worldPosition), 0.01f);
             Assert.True(bootstrap.TryGetUnitCardIdleTiltAngle(entity.EntityId, out var idleTiltAngle));
-            Assert.AreEqual(45f, idleTiltAngle, 0.01f);
+            var expectedIdleTiltAngle = bootstrap.Engine.Catalog.GetCardPieceVisual(entity.TemplateId)?.IdleTiltAngle
+                ?? CardPieceVisualRuntime.Default.IdleTiltAngle;
+            Assert.AreEqual(expectedIdleTiltAngle, idleTiltAngle, 0.01f);
             Assert.True(bootstrap.TryGetUnitPresentationHasStandardHierarchy(entity.EntityId));
             Assert.True(bootstrap.TryGetUnitPresentationUsesModelPortrait(entity.EntityId));
         }

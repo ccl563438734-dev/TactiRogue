@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 44a1f8a7cf330d546b65d0a80e84b595, type: 3}
   m_Name: Card_spell_command_shock
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:CardTemplate
+  m_EditorClassIdentifier: 
   Id: spell_command_shock
   DisplayName: "\u6307\u6325\u9707\u51FB"
   Description: "\u4EE5\u56FA\u5B9A\u6CD5\u672F\u4F24\u5BB3\u51FB\u9000\u4E00\u540D\u654C\u4EBA\u3002"

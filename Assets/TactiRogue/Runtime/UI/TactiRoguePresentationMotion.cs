@@ -245,10 +245,20 @@ namespace TactiRogue
 
         public void ConfigureDefaultPose(float idleTiltAngle, float defaultScale)
         {
+            ConfigureDefaultPose(DefaultRotationFromIdleTilt(idleTiltAngle), defaultScale);
+        }
+
+        public void ConfigureDefaultPose(Vector3 defaultRotationEuler, float defaultScale)
+        {
             EnsureStructure();
-            _rotationRootDefault.LocalRotation = Quaternion.Euler(-(90f - idleTiltAngle), 0f, 0f);
+            _rotationRootDefault.LocalRotation = Quaternion.Euler(defaultRotationEuler);
             _visualRootDefault.LocalScale = Vector3.one * Mathf.Max(0.01f, defaultScale);
             ResetVisualState();
+        }
+
+        public static Vector3 DefaultRotationFromIdleTilt(float idleTiltAngle)
+        {
+            return new Vector3(-(90f - idleTiltAngle), 0f, 0f);
         }
 
         public void SetFramePrefab(GameObject framePrefab, Material frameMaterial)

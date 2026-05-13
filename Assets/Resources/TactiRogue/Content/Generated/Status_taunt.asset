@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 3727f9cfc73ab0d40b750afbc15fca4c, type: 3}
   m_Name: Status_taunt
-  m_EditorClassIdentifier: TactiRogue.Runtime:TactiRogue:StatusTemplate
+  m_EditorClassIdentifier: 
   Id: taunt
   DisplayName: "\u5632\u8BBD"
   Description: "\u4FDD\u62A4\u9644\u8FD1\u53CB\u519B\u514D\u53D7\u654C\u65B9\u6307\u5411\u6027\u610F\u56FE\u9501\u5B9A\u3002"

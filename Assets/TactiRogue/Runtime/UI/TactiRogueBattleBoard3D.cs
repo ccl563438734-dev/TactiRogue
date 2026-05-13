@@ -70,6 +70,7 @@ namespace TactiRogue
         private string _appliedFrameModelKey;
         private string _appliedFrameMaterialKey;
         private string _appliedCardArtKey;
+        private float _cellSize = TactiRogueContentDatabase.DefaultBoardCellSize;
         private CardPieceVisualRuntime _currentVisual = CardPieceVisualRuntime.Default;
 
         public UnitCardPieceView(int entityId, Transform parent, HashSet<string> warningKeys)
@@ -83,6 +84,11 @@ namespace TactiRogue
         public Vector3 WorldPosition => _presentation.UnitRoot.position;
         public float IdleTiltAngle { get; private set; }
         public UnitPresentationView Presentation => _presentation;
+        public float CellSize
+        {
+            get => _cellSize;
+            set => _cellSize = value > 0f ? value : TactiRogueContentDatabase.DefaultBoardCellSize;
+        }
 
         public void Refresh(Vector3 worldPosition, CardPieceVisualRuntime visual, bool selected)
         {
@@ -91,7 +97,7 @@ namespace TactiRogue
             _presentation.UnitRoot.position = worldPosition + new Vector3(0f, _currentVisual.YOffset, 0f);
             IdleTiltAngle = _currentVisual.IdleTiltAngle;
 
-            _presentation.ConfigureDefaultPose(_currentVisual.IdleTiltAngle, _currentVisual.DefaultScale);
+            _presentation.ConfigureDefaultPose(_currentVisual.DefaultRotationEuler, _currentVisual.DefaultScale);
             EnsureFrame(_currentVisual.FrameModelKey, _currentVisual.FrameMaterialKey, _currentVisual.ModelKey);
             EnsurePortraitMaterial();
             if (!string.Equals(_appliedCardArtKey, _currentVisual.CardArtKey, StringComparison.Ordinal))
@@ -204,7 +210,7 @@ namespace TactiRogue
                 startWorldPosition = startWorldPosition,
                 targetWorldPosition = targetWorldPosition,
                 direction = direction.normalized,
-                gridDistance = Mathf.Max(1, Mathf.RoundToInt(new Vector2(direction.x, direction.z).magnitude)),
+                gridDistance = Mathf.Max(1, Mathf.RoundToInt(new Vector2(direction.x, direction.z).magnitude / Mathf.Max(0.0001f, CellSize))),
                 hasHit = true,
                 targetTransform = targetTransform,
             };
@@ -307,9 +313,6 @@ namespace TactiRogue
 
     public sealed class BattleBoard3DController
     {
-        private const float CellSize = 1f;
-        private const float CellGap = 0.08f;
-
         private static Texture2D _placeholderTexture;
         private readonly Dictionary<GridPosition, BoardCell3DView> _cells = new Dictionary<GridPosition, BoardCell3DView>();
         private readonly Dictionary<int, UnitCardPieceView> _unitViews = new Dictionary<int, UnitCardPieceView>();
@@ -322,6 +325,9 @@ namespace TactiRogue
         private RectTransform _viewportPanel;
         private int _boardWidth = -1;
         private int _boardHeight = -1;
+        private float _cellSize = TactiRogueContentDatabase.DefaultBoardCellSize;
+        private float _cellVisualSize = TactiRogueContentDatabase.DefaultBoardCellSize - TactiRogueContentDatabase.DefaultBoardCellGap;
+        private float _cellHeight = TactiRogueContentDatabase.DefaultBoardCellHeight;
 
         public int BoardCellCount => _cells.Count;
         public int UnitCardCount => _unitViews.Count;
@@ -376,6 +382,12 @@ namespace TactiRogue
             IReadOnlyDictionary<int, EntityPresentationSnapshot> beforeSnapshots = null)
         {
             TrackPendingDeaths(motionEvents);
+            if (RefreshBoardVisualSettings(host.Engine?.Catalog))
+            {
+                _boardWidth = -1;
+                _boardHeight = -1;
+            }
+
             UpdateCameraViewport();
             RebuildBoard(host);
             RefreshCellVisuals(host);
@@ -432,9 +444,9 @@ namespace TactiRogue
 
         public Vector3 GridToWorld(GridPosition position)
         {
-            var originX = -(_boardWidth - 1) * CellSize * 0.5f;
-            var originZ = -(_boardHeight - 1) * CellSize * 0.5f;
-            return new Vector3(originX + position.X * CellSize, 0f, originZ + position.Y * CellSize);
+            var originX = -(_boardWidth - 1) * _cellSize * 0.5f;
+            var originZ = -(_boardHeight - 1) * _cellSize * 0.5f;
+            return new Vector3(originX + position.X * _cellSize, 0f, originZ + position.Y * _cellSize);
         }
 
         public static Material CreateColorMaterial(Color color)
@@ -487,7 +499,7 @@ namespace TactiRogue
                     cellGo.name = $"Cell_{x}_{y}";
                     cellGo.transform.SetParent(_cellRoot, false);
                     cellGo.transform.position = GridToWorld(position);
-                    cellGo.transform.localScale = new Vector3(CellSize - CellGap, 0.04f, CellSize - CellGap);
+                    cellGo.transform.localScale = new Vector3(_cellVisualSize, _cellHeight, _cellVisualSize);
                     var view = cellGo.AddComponent<BoardCell3DView>();
                     view.Initialize(position);
                     view.Clicked += host.HandleBoardCellClicked;
@@ -609,6 +621,7 @@ namespace TactiRogue
                     _unitViews[entity.EntityId] = view;
                 }
 
+                view.CellSize = _cellSize;
                 var visual = ResolveVisual(host.State, host.Engine.Catalog, entity);
                 var displayPosition = entity.IsAlive || beforeSnapshots == null || !beforeSnapshots.TryGetValue(entity.EntityId, out var snapshot)
                     ? entity.Position
@@ -765,11 +778,29 @@ namespace TactiRogue
 
         private void PositionCamera(int width, int height)
         {
-            var boardSpan = Mathf.Max(width, height) * CellSize;
+            var boardSpan = Mathf.Max(width, height) * _cellSize;
             var center = new Vector3(0f, 0f, 0f);
             _camera.transform.position = center + new Vector3(0f, boardSpan * 0.95f + 3.5f, -boardSpan * 0.95f - 3f);
             _camera.transform.rotation = Quaternion.Euler(55f, 0f, 0f);
-            _camera.orthographicSize = Mathf.Max(height * CellSize * 0.72f, width * CellSize * 0.42f) + 1.2f;
+            _camera.orthographicSize = Mathf.Max(height * _cellSize * 0.72f, width * _cellSize * 0.42f) + 1.2f;
+        }
+
+        private bool RefreshBoardVisualSettings(TactiRogueContentDatabase catalog)
+        {
+            var cellSize = catalog?.GetBoardCellSize() ?? TactiRogueContentDatabase.DefaultBoardCellSize;
+            var cellVisualSize = catalog?.GetBoardCellVisualSize() ?? (TactiRogueContentDatabase.DefaultBoardCellSize - TactiRogueContentDatabase.DefaultBoardCellGap);
+            var cellHeight = catalog?.GetBoardCellHeight() ?? TactiRogueContentDatabase.DefaultBoardCellHeight;
+            if (Mathf.Approximately(_cellSize, cellSize)
+                && Mathf.Approximately(_cellVisualSize, cellVisualSize)
+                && Mathf.Approximately(_cellHeight, cellHeight))
+            {
+                return false;
+            }
+
+            _cellSize = cellSize;
+            _cellVisualSize = cellVisualSize;
+            _cellHeight = cellHeight;
+            return true;
         }
 
         private void UpdateCameraViewport()
@@ -813,6 +844,7 @@ namespace TactiRogue
             CardArtKey = string.Empty,
             BackArtKey = DefaultBackArtKey,
             IdleTiltAngle = 45f,
+            DefaultRotationEuler = new Vector3(-45f, 0f, 0f),
             DefaultScale = 1f,
             YOffset = 0.05f,
         };
@@ -823,6 +855,7 @@ namespace TactiRogue
         public string CardArtKey;
         public string BackArtKey;
         public float IdleTiltAngle;
+        public Vector3 DefaultRotationEuler;
         public float DefaultScale;
         public float YOffset;
         public string IdleMotionKey;
@@ -842,6 +875,7 @@ namespace TactiRogue
                 CardArtKey = definition.CardArtKey,
                 BackArtKey = string.IsNullOrWhiteSpace(definition.BackArtKey) ? DefaultBackArtKey : definition.BackArtKey,
                 IdleTiltAngle = definition.IdleTiltAngle,
+                DefaultRotationEuler = definition.DefaultRotationEuler,
                 DefaultScale = definition.DefaultScale <= 0f ? 1f : definition.DefaultScale,
                 YOffset = definition.YOffset,
                 IdleMotionKey = definition.IdleMotionKey,
