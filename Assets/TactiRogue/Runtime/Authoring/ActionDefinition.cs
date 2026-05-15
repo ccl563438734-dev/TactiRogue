@@ -11,6 +11,7 @@ namespace TactiRogue
         public ActionKind ActionKind;
         public ActionTargetMode TargetMode;
         public ActionTargetFilter TargetFilter;
+        public bool CanTargetEmptyCell;
         public int MinRange;
         public int MaxRange = 1;
         public bool UseActorAttackValue = true;
@@ -28,6 +29,6 @@ namespace TactiRogue
         public bool ConsumeActorAction = true;
         public bool AllowDiagonalTargeting = true;
         public bool SkipMovePhase;
-        [HideInInspector] public int AuthoringVersion = 1;
+        [HideInInspector] public int AuthoringVersion = 2;
     }
 }

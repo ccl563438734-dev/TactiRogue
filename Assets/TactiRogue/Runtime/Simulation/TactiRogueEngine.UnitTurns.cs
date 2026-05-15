@@ -58,6 +58,91 @@ namespace TactiRogue
             return GetValidMoveTargetCells(state, actor, action);
         }
 
+        public ActionResult ApplyTemporaryUnitMove(BattleState state, int actorEntityId, GridPosition targetCell)
+        {
+            var result = CreateBaseResult(state);
+            if (state.Phase != BattlePhase.PlayerAction)
+            {
+                return Fail(result, "Player actions are only available during the player phase.");
+            }
+
+            if (!state.Entities.TryGetValue(actorEntityId, out var actor) || !actor.IsAlive || actor.Team != TeamId.Player)
+            {
+                return Fail(result, "Invalid acting unit.");
+            }
+
+            if (!actor.CanAct || actor.RemainingActions <= 0)
+            {
+                return Fail(result, "That unit has no actions remaining.");
+            }
+
+            var action = _catalog.GetAction(actor.ActionId);
+            if (action == null)
+            {
+                return Fail(result, "The selected unit has no action definition.");
+            }
+
+            if (!UsesSeparateMovePhase(actor, action))
+            {
+                return Fail(result, "That unit does not use a separate move phase.");
+            }
+
+            if (!TryResolveMoveTargetCell(state, actor, action, targetCell, true, out var resolvedMoveCell, out var failureReason))
+            {
+                return Fail(result, failureReason);
+            }
+
+            MoveEntityTo(state, actor, resolvedMoveCell, result.Events);
+            return Finish(result, state);
+        }
+
+        public ActionResult RollbackTemporaryUnitMove(BattleState state, int actorEntityId, GridPosition originalCell)
+        {
+            var result = CreateBaseResult(state);
+            if (!state.Entities.TryGetValue(actorEntityId, out var actor) || !actor.IsAlive)
+            {
+                return Fail(result, "Invalid acting unit.");
+            }
+
+            if (!actor.OccupiesCell || !state.Grid.IsValid(originalCell))
+            {
+                return Fail(result, "Original move cell is not valid.");
+            }
+
+            if (state.Grid.Occupancy.TryGetValue(originalCell, out var occupantId) && occupantId != actor.EntityId)
+            {
+                return Fail(result, "Original move cell is occupied.");
+            }
+
+            MoveEntityTo(state, actor, originalCell, result.Events);
+            return Finish(result, state);
+        }
+
+        public ActionResult EndUnitAction(BattleState state, int actorEntityId)
+        {
+            var result = CreateBaseResult(state);
+            if (state.Phase != BattlePhase.PlayerAction)
+            {
+                return Fail(result, "Player actions are only available during the player phase.");
+            }
+
+            if (!state.Entities.TryGetValue(actorEntityId, out var actor) || !actor.IsAlive || actor.Team != TeamId.Player)
+            {
+                return Fail(result, "Invalid acting unit.");
+            }
+
+            if (!actor.CanAct || actor.RemainingActions <= 0)
+            {
+                return Fail(result, "That unit has no actions remaining.");
+            }
+
+            actor.RemainingActions = Math.Max(0, actor.RemainingActions - 1);
+            result.Events.Add(CreateEvent(BattleEventType.Info, $"{GetEntityName(actor.TemplateId)} ended its action.", actor.EntityId, -1, actor.Position, actor.RemainingActions));
+            RefreshEnemyIntents(state, result.Events);
+            CheckForWinOrLoss(state, result.Events);
+            return Finish(result, state);
+        }
+
         private bool TryExecuteUnitTurnCore(
             BattleState state,
             EntityInstance actor,

@@ -7,15 +7,21 @@ using UnityEngine.EventSystems;
 
 namespace TactiRogue
 {
-    public sealed class BoardCell3DView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public sealed class BoardCell3DView : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        private const float LongPressSeconds = 0.45f;
         private Collider _collider;
         private Renderer _renderer;
+        private bool _isPressing;
+        private bool _longPressTriggered;
+        private float _pressStartTime;
+        private PointerEventData.InputButton _pressedButton;
 
         public GridPosition Position { get; private set; }
         public Color CurrentColor { get; private set; }
 
-        public event Action<GridPosition> Clicked;
+        public event Action<GridPosition, PointerEventData.InputButton> Clicked;
+        public event Action<GridPosition, PointerEventData.InputButton> LongPressed;
         public event Action<GridPosition> Hovered;
         public event Action<GridPosition> HoverExited;
 
@@ -46,7 +52,40 @@ namespace TactiRogue
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Clicked?.Invoke(Position);
+            if (_longPressTriggered)
+            {
+                _longPressTriggered = false;
+                return;
+            }
+
+            Clicked?.Invoke(Position, eventData.button);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            _isPressing = true;
+            _longPressTriggered = false;
+            _pressStartTime = Time.unscaledTime;
+            _pressedButton = eventData.button;
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            _isPressing = false;
+        }
+
+        private void Update()
+        {
+            if (!_isPressing
+                || _longPressTriggered
+                || _pressedButton != PointerEventData.InputButton.Right
+                || Time.unscaledTime - _pressStartTime < LongPressSeconds)
+            {
+                return;
+            }
+
+            _longPressTriggered = true;
+            LongPressed?.Invoke(Position, _pressedButton);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -503,6 +542,7 @@ namespace TactiRogue
                     var view = cellGo.AddComponent<BoardCell3DView>();
                     view.Initialize(position);
                     view.Clicked += host.HandleBoardCellClicked;
+                    view.LongPressed += host.HandleBoardCellLongPressed;
                     view.Hovered += host.HandleBoardCellHovered;
                     view.HoverExited += host.HandleBoardCellHoverExited;
                     _cells[position] = view;

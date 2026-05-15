@@ -380,7 +380,13 @@ namespace TactiRogue
                     return false;
                 }
 
-                if (action.TargetFilter == ActionTargetFilter.EmptyCell && state.Grid.IsOccupied(targetCell))
+                var targetCellOccupied = state.Grid.IsOccupied(targetCell);
+                if (!targetCellOccupied && !action.CanTargetEmptyCell)
+                {
+                    return false;
+                }
+
+                if (action.TargetFilter == ActionTargetFilter.EmptyCell && targetCellOccupied)
                 {
                     return false;
                 }

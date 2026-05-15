@@ -238,8 +238,8 @@ namespace TactiRogue
     {
         public static readonly string[] Headers =
         {
-            "Id", "DisplayName", "Description", "ActionKind", "TargetMode", "TargetFilter", "MinRange", "MaxRange",
-            "UseActorAttackValue", "DamageAmount", "HealAmount", "PushForce", "Radius", "MoveRange", "MovePattern",
+            "Id", "DisplayName", "Description", "ActionKind", "TargetMode", "TargetFilter", "CanTargetEmptyCell",
+            "MinRange", "MaxRange", "UseActorAttackValue", "DamageAmount", "HealAmount", "PushForce", "Radius", "MoveRange", "MovePattern",
             "MoveBeforeEffect", "ExtraActionsGranted", "ApplyStatusId", "OverrideStatusDuration", "SummonEntityId",
             "ConsumeActorAction", "AllowDiagonalTargeting", "SkipMovePhase",
         };
@@ -250,6 +250,7 @@ namespace TactiRogue
         public ActionKind ActionKind;
         public ActionTargetMode TargetMode;
         public ActionTargetFilter TargetFilter;
+        public bool CanTargetEmptyCell;
         public int MinRange;
         public int MaxRange;
         public bool UseActorAttackValue;
@@ -278,6 +279,7 @@ namespace TactiRogue
                 ActionKind.ToString(),
                 TargetMode.ToString(),
                 TargetFilter.ToString(),
+                TactiRogueExcelShared.BoolToText(CanTargetEmptyCell),
                 MinRange.ToString(CultureInfo.InvariantCulture),
                 MaxRange.ToString(CultureInfo.InvariantCulture),
                 TactiRogueExcelShared.BoolToText(UseActorAttackValue),
@@ -735,6 +737,7 @@ namespace TactiRogue
                     ActionKind = action.ActionKind,
                     TargetMode = action.TargetMode,
                     TargetFilter = action.TargetFilter,
+                    CanTargetEmptyCell = action.CanTargetEmptyCell,
                     MinRange = action.MinRange,
                     MaxRange = action.MaxRange,
                     UseActorAttackValue = action.UseActorAttackValue,
@@ -1219,6 +1222,7 @@ namespace TactiRogue
                 || !TryReadEnum(row, "ActionKind", report, out ActionKind actionKind)
                 || !TryReadEnum(row, "TargetMode", report, out ActionTargetMode targetMode)
                 || !TryReadEnum(row, "TargetFilter", report, out ActionTargetFilter targetFilter)
+                || !TryReadBool(row, "CanTargetEmptyCell", report, out var canTargetEmptyCell)
                 || !TryReadInt(row, "MinRange", report, out var minRange)
                 || !TryReadInt(row, "MaxRange", report, out var maxRange)
                 || !TryReadBool(row, "UseActorAttackValue", report, out var useActorAttackValue)
@@ -1246,6 +1250,7 @@ namespace TactiRogue
                 ActionKind = actionKind,
                 TargetMode = targetMode,
                 TargetFilter = targetFilter,
+                CanTargetEmptyCell = canTargetEmptyCell,
                 MinRange = minRange,
                 MaxRange = maxRange,
                 UseActorAttackValue = useActorAttackValue,
@@ -1980,6 +1985,7 @@ namespace TactiRogue
             asset.ActionKind = row.ActionKind;
             asset.TargetMode = row.TargetMode;
             asset.TargetFilter = row.TargetFilter;
+            asset.CanTargetEmptyCell = row.CanTargetEmptyCell;
             asset.MinRange = row.MinRange;
             asset.MaxRange = row.MaxRange;
             asset.UseActorAttackValue = row.UseActorAttackValue;
@@ -1997,7 +2003,7 @@ namespace TactiRogue
             asset.ConsumeActorAction = row.ConsumeActorAction;
             asset.AllowDiagonalTargeting = row.AllowDiagonalTargeting;
             asset.SkipMovePhase = row.SkipMovePhase;
-            asset.AuthoringVersion = 1;
+            asset.AuthoringVersion = 2;
             return asset;
         }
 

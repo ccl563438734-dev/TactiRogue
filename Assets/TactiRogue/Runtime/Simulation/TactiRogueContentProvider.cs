@@ -128,7 +128,12 @@ namespace TactiRogue
                 if (action.AuthoringVersion <= 0)
                 {
                     ApplyLegacyActionDefaults(action);
-                    action.AuthoringVersion = 1;
+                }
+
+                if (action.AuthoringVersion <= 1)
+                {
+                    ApplyActionTargetDefaults(action);
+                    action.AuthoringVersion = 2;
                 }
             }
 
@@ -273,6 +278,15 @@ namespace TactiRogue
             }
         }
 
+        private static void ApplyActionTargetDefaults(ActionDefinition action)
+        {
+            if (action.TargetMode == ActionTargetMode.Cell
+                && (action.TargetFilter == ActionTargetFilter.None || action.TargetFilter == ActionTargetFilter.EmptyCell))
+            {
+                action.CanTargetEmptyCell = true;
+            }
+        }
+
         private static void ApplyLegacyEntityDefaults(EntityTemplate entity)
         {
             var moveProfileLooksLegacy = entity.MoveProfile == null || IsDefaultMoveProfile(entity.MoveProfile);
@@ -395,6 +409,8 @@ namespace TactiRogue
             action.ActionKind = actionKind;
             action.TargetMode = targetMode;
             action.TargetFilter = targetFilter;
+            action.CanTargetEmptyCell = targetMode == ActionTargetMode.Cell
+                                        && (targetFilter == ActionTargetFilter.None || targetFilter == ActionTargetFilter.EmptyCell);
             action.MinRange = minRange;
             action.MaxRange = maxRange;
             action.UseActorAttackValue = useActorAttack;

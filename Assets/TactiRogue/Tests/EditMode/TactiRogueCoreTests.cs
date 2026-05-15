@@ -476,6 +476,73 @@ namespace TactiRogue.Tests
         }
 
         [Test]
+        public void TemporaryUnitMoveRollsBackWithoutConsumingAction()
+        {
+            var state = _engine.CreateBattle(CreateScenario(
+                ("commander_core", TeamId.Player, 0, 0),
+                ("guardian", TeamId.Player, 1, 1),
+                ("hunter", TeamId.Enemy, 3, 1)));
+
+            var guardian = state.LivingEntities(TeamId.Player).First(entity => entity.TemplateId == "guardian");
+            var originalCell = guardian.Position;
+            var moveCell = new GridPosition(2, 1);
+
+            var move = _engine.ApplyTemporaryUnitMove(state, guardian.EntityId, moveCell);
+
+            Assert.True(move.Success);
+            Assert.AreEqual(moveCell, guardian.Position);
+            Assert.AreEqual(guardian.EntityId, state.Grid.Occupancy[moveCell]);
+            Assert.AreEqual(1, guardian.RemainingActions);
+
+            var rollback = _engine.RollbackTemporaryUnitMove(state, guardian.EntityId, originalCell);
+
+            Assert.True(rollback.Success);
+            Assert.AreEqual(originalCell, guardian.Position);
+            Assert.AreEqual(guardian.EntityId, state.Grid.Occupancy[originalCell]);
+            Assert.False(state.Grid.Occupancy.ContainsKey(moveCell));
+            Assert.AreEqual(1, guardian.RemainingActions);
+        }
+
+        [Test]
+        public void EndingUnitActionCommitsTemporaryMoveWithoutBehavior()
+        {
+            var state = _engine.CreateBattle(CreateScenario(
+                ("commander_core", TeamId.Player, 0, 0),
+                ("guardian", TeamId.Player, 1, 1),
+                ("hunter", TeamId.Enemy, 3, 1)));
+
+            var guardian = state.LivingEntities(TeamId.Player).First(entity => entity.TemplateId == "guardian");
+            var moveCell = new GridPosition(2, 1);
+
+            Assert.True(_engine.ApplyTemporaryUnitMove(state, guardian.EntityId, moveCell).Success);
+            var endAction = _engine.EndUnitAction(state, guardian.EntityId);
+
+            Assert.True(endAction.Success);
+            Assert.AreEqual(moveCell, guardian.Position);
+            Assert.AreEqual(0, guardian.RemainingActions);
+        }
+
+        [Test]
+        public void CellActionsUseCanTargetEmptyCell()
+        {
+            var state = _engine.CreateBattle(CreateScenario(
+                ("commander_core", TeamId.Player, 0, 0),
+                ("bombardier", TeamId.Enemy, 2, 2),
+                ("hunter", TeamId.Enemy, 4, 4)));
+
+            var bombardier = state.LivingEntities(TeamId.Enemy).First(entity => entity.TemplateId == "bombardier");
+            var action = _engine.Catalog.GetAction(bombardier.ActionId);
+            var emptyCell = new GridPosition(2, 3);
+
+            Assert.True(action.CanTargetEmptyCell);
+            Assert.Contains(emptyCell, _engine.GetValidActionTargetCells(state, bombardier.EntityId));
+
+            action.CanTargetEmptyCell = false;
+
+            Assert.False(_engine.GetValidActionTargetCells(state, bombardier.EntityId).Contains(emptyCell));
+        }
+
+        [Test]
         public void PreviewUsesSimulatedEnemyIntents()
         {
             var scenario = CreateScenario(

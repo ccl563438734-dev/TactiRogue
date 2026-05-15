@@ -55,6 +55,33 @@ namespace TactiRogue
         }
     }
 
+    public sealed class PendingUnitTurnState
+    {
+        public int UnitId { get; private set; } = -1;
+        public GridPosition OriginalCell { get; private set; }
+        public GridPosition CurrentMovedCell { get; private set; }
+        public string ActionId { get; private set; }
+        public bool HasPendingMove { get; private set; }
+
+        public void Set(int unitId, GridPosition originalCell, GridPosition currentMovedCell, string actionId)
+        {
+            UnitId = unitId;
+            OriginalCell = originalCell;
+            CurrentMovedCell = currentMovedCell;
+            ActionId = actionId;
+            HasPendingMove = true;
+        }
+
+        public void Clear()
+        {
+            UnitId = -1;
+            OriginalCell = default;
+            CurrentMovedCell = default;
+            ActionId = null;
+            HasPendingMove = false;
+        }
+    }
+
     public sealed class BattleInputController
     {
         public BattleInputState CurrentState { get; private set; } = BattleInputState.Idle;
@@ -121,6 +148,7 @@ namespace TactiRogue
         public IReadOnlyList<string> LogLines => _logLines;
         public BattleSelectionController SelectionController { get; private set; }
         public BattleInputController InputController { get; private set; }
+        public PendingUnitTurnState PendingUnitTurn { get; private set; }
         public PreviewPresentationController PreviewController { get; private set; }
         public int BoardCellCount => _hudController?.BoardCellCount ?? 0;
         public int UnitCardCount => _hudController?.UnitCardCount ?? 0;
@@ -142,6 +170,7 @@ namespace TactiRogue
             Engine = new TactiRogueEngine(TactiRogueContentProvider.LoadOrCreateDatabase());
             SelectionController = new BattleSelectionController();
             InputController = new BattleInputController();
+            PendingUnitTurn = new PendingUnitTurnState();
             PreviewController = new PreviewPresentationController();
             _scenarios.AddRange(TactiRogueScenarioRepository.LoadAll());
 
@@ -167,6 +196,7 @@ namespace TactiRogue
             State = Engine.CreateBattle(_scenarios[index]);
             SelectionController.Clear();
             InputController.Clear();
+            PendingUnitTurn.Clear();
             PreviewController.Clear();
             ViewedPileZone = CardZone.None;
             _logLines.Clear();
@@ -216,7 +246,23 @@ namespace TactiRogue
 
         public void HandleBoardCellClicked(GridPosition position)
         {
+            HandleBoardCellClicked(position, PointerEventData.InputButton.Right);
+        }
+
+        public void HandleBoardCellClicked(GridPosition position, PointerEventData.InputButton button)
+        {
             if (State == null)
+            {
+                return;
+            }
+
+            if (button == PointerEventData.InputButton.Left && PendingUnitTurn.HasPendingMove)
+            {
+                RollbackPendingMove(true);
+                return;
+            }
+
+            if (button != PointerEventData.InputButton.Right)
             {
                 return;
             }
@@ -228,15 +274,23 @@ namespace TactiRogue
                 case BattleInputState.MoveTargeting:
                     if (SelectionController.SelectedEntityId >= 0 && Engine.GetValidMoveTargetCells(State, SelectionController.SelectedEntityId).Contains(position))
                     {
-                        SelectionController.SetCommittedMoveCell(position);
-                        InputController.BeginBehaviorTargeting();
-                        RefreshSelectionPreview();
-                        RefreshHud();
+                        ApplyPendingMove(position);
                         return;
                     }
 
                     break;
                 case BattleInputState.BehaviorTargeting:
+                    if (CanExecuteSelectedBehaviorAt(position, hasEntity ? entityId : -1, hasEntity))
+                    {
+                        ExecuteUnitTurn(position, hasEntity ? entityId : -1, hasEntity);
+                        return;
+                    }
+
+                    if (TrySelectUnitAt(entityId, hasEntity, true))
+                    {
+                        return;
+                    }
+
                     ExecuteUnitTurn(position, hasEntity ? entityId : -1, hasEntity);
                     return;
                 case BattleInputState.CardSelected:
@@ -245,34 +299,50 @@ namespace TactiRogue
                     return;
             }
 
-            if (hasEntity && State.Entities.TryGetValue(entityId, out var entity))
+            if (!TrySelectUnitAt(entityId, hasEntity))
             {
-                SelectionController.SelectEntity(entityId);
-                if (entity.Team == TeamId.Player && entity.CanAct && entity.RemainingActions > 0 && !string.IsNullOrWhiteSpace(entity.ActionId))
+                if (PendingUnitTurn.HasPendingMove)
                 {
-                    if (Engine.UsesSeparateMovePhase(State, entityId))
-                    {
-                        InputController.BeginMoveTargeting();
-                    }
-                    else
-                    {
-                        SelectionController.SetCommittedMoveCell(entity.Position);
-                        InputController.BeginBehaviorTargeting();
-                    }
+                    RollbackPendingMove(true);
+                    return;
                 }
-                else
-                {
-                    InputController.Clear();
-                }
-            }
-            else
-            {
+
                 SelectionController.Clear();
                 InputController.Clear();
+                PendingUnitTurn.Clear();
+                PreviewController.Clear();
+                RefreshHud();
+            }
+        }
+
+        public void HandleBoardCellLongPressed(GridPosition position)
+        {
+            HandleBoardCellLongPressed(position, PointerEventData.InputButton.Right);
+        }
+
+        public void HandleBoardCellLongPressed(GridPosition position, PointerEventData.InputButton button)
+        {
+            if (State == null || button != PointerEventData.InputButton.Right)
+            {
+                return;
             }
 
-            PreviewController.Clear();
-            RefreshHud();
+            var selectedEntityId = PendingUnitTurn.HasPendingMove ? PendingUnitTurn.UnitId : SelectionController.SelectedEntityId;
+            if (selectedEntityId < 0 || !State.Entities.TryGetValue(selectedEntityId, out var entity) || !entity.IsAlive)
+            {
+                return;
+            }
+
+            if (position != entity.Position)
+            {
+                return;
+            }
+
+            if (InputController.CurrentState == BattleInputState.MoveTargeting
+                || InputController.CurrentState == BattleInputState.BehaviorTargeting)
+            {
+                EndSelectedUnitAction(true);
+            }
         }
 
         public void HandleBoardCellHovered(GridPosition position)
@@ -353,6 +423,11 @@ namespace TactiRogue
                 return;
             }
 
+            if (PendingUnitTurn.HasPendingMove && !RollbackPendingMove(false))
+            {
+                return;
+            }
+
             if (SelectionController.SelectedCardId == cardInstanceId)
             {
                 SelectionController.Clear();
@@ -404,6 +479,23 @@ namespace TactiRogue
                 return;
             }
 
+            if (PendingUnitTurn.HasPendingMove)
+            {
+                if (PendingUnitTurn.UnitId == entity.EntityId)
+                {
+                    SelectionController.SetCommittedMoveCell(PendingUnitTurn.CurrentMovedCell);
+                    InputController.BeginBehaviorTargeting();
+                    RefreshSelectionPreview();
+                    RefreshHud();
+                    return;
+                }
+
+                if (!RollbackPendingMove(false))
+                {
+                    return;
+                }
+            }
+
             if (Engine.UsesSeparateMovePhase(State, entity.EntityId))
             {
                 SelectionController.ClearCommittedMoveCell();
@@ -426,6 +518,11 @@ namespace TactiRogue
                 return;
             }
 
+            if (PendingUnitTurn.HasPendingMove && !EndSelectedUnitAction(false))
+            {
+                return;
+            }
+
             var beforeSnapshots = CapturePresentationSnapshots();
             ApplyResult(Engine.EndTurn(State), beforeSnapshots);
         }
@@ -437,22 +534,198 @@ namespace TactiRogue
 
         public void HandleCancelClicked()
         {
-            if (State != null
-                && InputController.CurrentState == BattleInputState.BehaviorTargeting
-                && SelectionController.SelectedEntityId >= 0
-                && Engine.UsesSeparateMovePhase(State, SelectionController.SelectedEntityId))
+            if (State != null && PendingUnitTurn.HasPendingMove)
             {
-                SelectionController.ClearCommittedMoveCell();
-                InputController.BeginMoveTargeting();
-                RefreshSelectionPreview();
-                RefreshHud();
+                RollbackPendingMove(true);
                 return;
             }
 
             SelectionController.Clear();
             InputController.Clear();
+            PendingUnitTurn.Clear();
             PreviewController.Clear();
             RefreshHud();
+        }
+
+        private bool TrySelectUnitAt(int entityId, bool hasEntity, bool requireActionable = false)
+        {
+            if (!hasEntity || !State.Entities.TryGetValue(entityId, out var entity))
+            {
+                return false;
+            }
+
+            var isActionablePlayerUnit = entity.Team == TeamId.Player
+                                         && entity.CanAct
+                                         && entity.RemainingActions > 0
+                                         && !string.IsNullOrWhiteSpace(entity.ActionId);
+            if (requireActionable && !isActionablePlayerUnit)
+            {
+                return false;
+            }
+
+            if (PendingUnitTurn.HasPendingMove)
+            {
+                if (PendingUnitTurn.UnitId == entityId)
+                {
+                    return false;
+                }
+
+                if (!RollbackPendingMove(false))
+                {
+                    return false;
+                }
+            }
+
+            SelectionController.SelectEntity(entityId);
+            PendingUnitTurn.Clear();
+            if (isActionablePlayerUnit)
+            {
+                if (Engine.UsesSeparateMovePhase(State, entityId))
+                {
+                    InputController.BeginMoveTargeting();
+                }
+                else
+                {
+                    SelectionController.SetCommittedMoveCell(entity.Position);
+                    InputController.BeginBehaviorTargeting();
+                }
+
+                RefreshSelectionPreview();
+            }
+            else
+            {
+                InputController.Clear();
+                PreviewController.Clear();
+            }
+
+            RefreshHud();
+            return true;
+        }
+
+        private bool ApplyPendingMove(GridPosition position)
+        {
+            var actorEntityId = SelectionController.SelectedEntityId;
+            if (actorEntityId < 0 || !State.Entities.TryGetValue(actorEntityId, out var actor))
+            {
+                return false;
+            }
+
+            var originalCell = actor.Position;
+            var beforeSnapshots = CapturePresentationSnapshots();
+            var result = Engine.ApplyTemporaryUnitMove(State, actorEntityId, position);
+            if (!result.Success)
+            {
+                AppendLog($"Move failed: {result.FailureReason}");
+                RefreshSelectionPreview();
+                RefreshHud();
+                return false;
+            }
+
+            var currentCell = State.Entities.TryGetValue(actorEntityId, out var movedActor) ? movedActor.Position : position;
+            PendingUnitTurn.Set(actorEntityId, originalCell, currentCell, actor.ActionId);
+            SelectionController.SetCommittedMoveCell(currentCell);
+            InputController.BeginBehaviorTargeting();
+            AppendResultEvents(result, false);
+            RefreshSelectionPreview();
+            RefreshHud(result.Events, beforeSnapshots);
+            return true;
+        }
+
+        private bool CanExecuteSelectedBehaviorAt(GridPosition position, int entityId, bool hasEntity)
+        {
+            if (SelectionController.SelectedEntityId < 0)
+            {
+                return false;
+            }
+
+            var preview = Engine.Preview(State, new PreviewRequest
+            {
+                SourceKind = PreviewSourceKind.UnitAction,
+                Stage = UnitTurnStage.BehaviorTargeting,
+                ActorEntityId = SelectionController.SelectedEntityId,
+                CommittedMoveCell = SelectionController.CommittedMoveCell,
+                HasCommittedMoveCell = SelectionController.HasCommittedMoveCell,
+                TargetCell = position,
+                TargetEntityId = entityId,
+                HasTargetCell = true,
+                HasTargetEntity = hasEntity,
+            });
+
+            return preview.Valid;
+        }
+
+        private bool RollbackPendingMove(bool clearSelection)
+        {
+            if (!PendingUnitTurn.HasPendingMove)
+            {
+                if (clearSelection)
+                {
+                    SelectionController.Clear();
+                    InputController.Clear();
+                    PreviewController.Clear();
+                    RefreshHud();
+                }
+
+                return true;
+            }
+
+            var beforeSnapshots = CapturePresentationSnapshots();
+            var result = Engine.RollbackTemporaryUnitMove(State, PendingUnitTurn.UnitId, PendingUnitTurn.OriginalCell);
+            if (!result.Success)
+            {
+                AppendLog($"Move rollback failed: {result.FailureReason}");
+                RefreshSelectionPreview();
+                RefreshHud();
+                return false;
+            }
+
+            AppendResultEvents(result, false);
+            PendingUnitTurn.Clear();
+            SelectionController.ClearCommittedMoveCell();
+            if (clearSelection)
+            {
+                SelectionController.Clear();
+                InputController.Clear();
+                PreviewController.Clear();
+            }
+            else
+            {
+                RefreshSelectionPreview();
+            }
+
+            RefreshHud(result.Events, beforeSnapshots);
+            return true;
+        }
+
+        private bool EndSelectedUnitAction(bool refreshHud)
+        {
+            var actorEntityId = PendingUnitTurn.HasPendingMove ? PendingUnitTurn.UnitId : SelectionController.SelectedEntityId;
+            if (actorEntityId < 0)
+            {
+                return false;
+            }
+
+            var beforeSnapshots = CapturePresentationSnapshots();
+            var result = Engine.EndUnitAction(State, actorEntityId);
+            if (!result.Success)
+            {
+                AppendLog($"End action failed: {result.FailureReason}");
+                RefreshSelectionPreview();
+                RefreshHud();
+                return false;
+            }
+
+            AppendResultEvents(result);
+            PendingUnitTurn.Clear();
+            SelectionController.Clear();
+            InputController.Clear();
+            PreviewController.Clear();
+            if (refreshHud)
+            {
+                RefreshHud(result.Events, beforeSnapshots);
+            }
+
+            return true;
         }
 
         private void ExecuteUnitTurn(GridPosition position, int entityId, bool hasEntity)
@@ -497,22 +770,30 @@ namespace TactiRogue
                 return;
             }
 
-            if (result.Events.Count == 0)
-            {
-                AppendLog("No battle events were produced.");
-            }
-            else
-            {
-                foreach (var battleEvent in result.Events)
-                {
-                    AppendLog(battleEvent.Message);
-                }
-            }
-
+            AppendResultEvents(result);
+            PendingUnitTurn.Clear();
             SelectionController.Clear();
             InputController.Clear();
             PreviewController.Clear();
             RefreshHud(result.Events, beforeSnapshots);
+        }
+
+        private void AppendResultEvents(ActionResult result, bool logEmpty = true)
+        {
+            if (result.Events.Count == 0)
+            {
+                if (logEmpty)
+                {
+                    AppendLog("No battle events were produced.");
+                }
+
+                return;
+            }
+
+            foreach (var battleEvent in result.Events)
+            {
+                AppendLog(battleEvent.Message);
+            }
         }
 
         private void TogglePileViewer(CardZone zone, BattleEventType eventType, string message)

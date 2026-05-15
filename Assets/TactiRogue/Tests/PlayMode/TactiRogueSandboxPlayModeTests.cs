@@ -113,10 +113,12 @@ namespace TactiRogue.Tests
 
             Assert.AreEqual(BattleInputState.MoveTargeting, bootstrap.InputController.CurrentState);
 
-            var moveTarget = actingUnit.Position;
+            var originalCell = actingUnit.Position;
+            var startingActions = actingUnit.RemainingActions;
+            var moveTarget = originalCell;
             foreach (var cell in bootstrap.Engine.GetValidMoveTargetCells(bootstrap.State, actingUnit.EntityId))
             {
-                if (cell != actingUnit.Position)
+                if (cell != originalCell)
                 {
                     moveTarget = cell;
                     break;
@@ -127,18 +129,21 @@ namespace TactiRogue.Tests
             yield return null;
 
             Assert.AreEqual(BattleInputState.BehaviorTargeting, bootstrap.InputController.CurrentState);
+            Assert.True(bootstrap.PendingUnitTurn.HasPendingMove);
+            Assert.AreEqual(actingUnit.EntityId, bootstrap.PendingUnitTurn.UnitId);
+            Assert.AreEqual(originalCell, bootstrap.PendingUnitTurn.OriginalCell);
+            Assert.AreEqual(moveTarget, bootstrap.PendingUnitTurn.CurrentMovedCell);
+            Assert.AreEqual(moveTarget, bootstrap.State.Entities[actingUnit.EntityId].Position);
+            Assert.AreEqual(startingActions, bootstrap.State.Entities[actingUnit.EntityId].RemainingActions);
             Assert.True(bootstrap.SelectionController.HasCommittedMoveCell);
             Assert.AreEqual(moveTarget, bootstrap.SelectionController.CommittedMoveCell);
 
             bootstrap.HandleCancelClicked();
             yield return null;
 
-            Assert.AreEqual(BattleInputState.MoveTargeting, bootstrap.InputController.CurrentState);
-
-            bootstrap.HandleCancelClicked();
-            yield return null;
-
             Assert.AreEqual(BattleInputState.Idle, bootstrap.InputController.CurrentState);
+            Assert.False(bootstrap.PendingUnitTurn.HasPendingMove);
+            Assert.AreEqual(originalCell, bootstrap.State.Entities[actingUnit.EntityId].Position);
         }
 
         [UnityTest]
