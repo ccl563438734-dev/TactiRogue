@@ -704,6 +704,28 @@ namespace TactiRogue.Tests
         }
 
         [Test]
+        public void BattleHudPrefabsAreLoadableAndWired()
+        {
+            var rootPrefab = Resources.Load<GameObject>(BattleHUDController.BattleHudRootPrefabResourcePath);
+            Assert.NotNull(rootPrefab);
+
+            var binding = rootPrefab.GetComponent<BattleHudPrefabRoot>();
+            Assert.NotNull(binding);
+            Assert.True(binding.HasRequiredReferences(), "Battle HUD root prefab is missing one or more required references.");
+
+            var handCardPrefab = Resources.Load<GameObject>(BattleHUDController.HandCardPrefabResourcePath);
+            Assert.NotNull(handCardPrefab);
+
+            var cardView = handCardPrefab.GetComponent<CardButtonView>();
+            Assert.NotNull(cardView);
+            Assert.True(cardView.HasRequiredReferences(), "HandCard prefab is missing CardButtonView references.");
+            Assert.NotNull(cardView.Button);
+            Assert.NotNull(cardView.Background);
+            Assert.NotNull(cardView.TitleText);
+            Assert.NotNull(cardView.BodyText);
+        }
+
+        [Test]
         public void ExcelExportRoundTripBuildsEquivalentContent()
         {
             var workbookPath = Path.Combine(Path.GetTempPath(), "TactiRogue_excel_roundtrip.xlsx");

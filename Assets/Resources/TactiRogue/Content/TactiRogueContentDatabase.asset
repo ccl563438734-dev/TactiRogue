@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bc9e7c2a3b68e4a9e72eb1bf95f72d, type: 3}
   m_Name: TactiRogueContentDatabase
   m_EditorClassIdentifier: 
-  BoardCellSize: 1
-  BoardCellGap: 0.08
-  BoardCellHeight: 0.04
+  BoardCellSize: 5
+  BoardCellGap: 0.2
+  BoardCellHeight: 0.2
   StatusTemplates:
   - {fileID: 11400000, guid: d56c3ab6df16b794e8789ffc83b3620b, type: 2}
   - {fileID: 11400000, guid: a5cfc011459318a4091a9e398bfbfb95, type: 2}

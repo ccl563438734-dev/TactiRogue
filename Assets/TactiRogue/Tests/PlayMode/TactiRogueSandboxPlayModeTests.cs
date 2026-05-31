@@ -19,6 +19,10 @@ namespace TactiRogue.Tests
             Assert.GreaterOrEqual(bootstrap.Scenarios.Count, 3);
             Assert.Greater(bootstrap.BoardCellCount, 0);
             Assert.AreEqual(bootstrap.State.LivingEntities().Count(entity => entity.OccupiesCell), bootstrap.UnitCardCount);
+            var hudRoot = Object.FindObjectOfType<BattleHudPrefabRoot>();
+            Assert.NotNull(hudRoot);
+            Assert.AreEqual("TactiRogueBattleCanvas", hudRoot.gameObject.name);
+            Assert.NotNull(hudRoot.BoardViewport);
 
             for (var index = 0; index < bootstrap.Scenarios.Count; index++)
             {

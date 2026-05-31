@@ -18,6 +18,7 @@ MonoBehaviour:
   ActionKind: 3
   TargetMode: 2
   TargetFilter: 2
+  CanTargetEmptyCell: 0
   MinRange: 1
   MaxRange: 3
   UseActorAttackValue: 0
@@ -35,4 +36,4 @@ MonoBehaviour:
   ConsumeActorAction: 1
   AllowDiagonalTargeting: 1
   SkipMovePhase: 0
-  AuthoringVersion: 1
+  AuthoringVersion: 2

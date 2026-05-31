@@ -121,68 +121,18 @@ namespace TactiRogue
         }
     }
 
-    public sealed class CardButtonView : MonoBehaviour
-    {
-        public int CardInstanceId { get; private set; }
-        public Button Button { get; private set; }
-        public Image Background { get; private set; }
-        public Text TitleText { get; private set; }
-        public Text BodyText { get; private set; }
-
-        public void Initialize(int cardInstanceId, Font font, Action<int> onClicked)
-        {
-            CardInstanceId = cardInstanceId;
-            var rect = gameObject.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(170f, 144f);
-
-            Background = gameObject.AddComponent<Image>();
-            Button = gameObject.AddComponent<Button>();
-            Button.onClick.AddListener(() => onClicked?.Invoke(CardInstanceId));
-
-            var titleGo = new GameObject("Title", typeof(RectTransform));
-            titleGo.transform.SetParent(transform, false);
-            TitleText = titleGo.AddComponent<Text>();
-            TitleText.font = font;
-            TitleText.fontSize = 16;
-            TitleText.alignment = TextAnchor.UpperCenter;
-            TitleText.color = Color.white;
-            var titleRect = TitleText.rectTransform;
-            titleRect.anchorMin = new Vector2(0.05f, 0.58f);
-            titleRect.anchorMax = new Vector2(0.95f, 0.95f);
-            titleRect.offsetMin = Vector2.zero;
-            titleRect.offsetMax = Vector2.zero;
-
-            var bodyGo = new GameObject("Body", typeof(RectTransform));
-            bodyGo.transform.SetParent(transform, false);
-            BodyText = bodyGo.AddComponent<Text>();
-            BodyText.font = font;
-            BodyText.fontSize = 12;
-            BodyText.alignment = TextAnchor.UpperLeft;
-            BodyText.color = new Color(0.95f, 0.95f, 0.95f, 1f);
-            BodyText.horizontalOverflow = HorizontalWrapMode.Wrap;
-            BodyText.verticalOverflow = VerticalWrapMode.Truncate;
-            var bodyRect = BodyText.rectTransform;
-            bodyRect.anchorMin = new Vector2(0.06f, 0.08f);
-            bodyRect.anchorMax = new Vector2(0.94f, 0.58f);
-            bodyRect.offsetMin = Vector2.zero;
-            bodyRect.offsetMax = Vector2.zero;
-        }
-
-        public void SetVisual(string title, string body, Color color, bool selected, bool interactable)
-        {
-            TitleText.text = title;
-            BodyText.text = body;
-            Background.color = selected ? Color.Lerp(color, Color.white, 0.25f) : color;
-            Button.interactable = interactable;
-        }
-    }
-
     public sealed class BattleHUDController
     {
+        public const string BattleHudRootPrefabResourcePath = "TactiRogue/UI/BattleHUD/Root/TactiRogueBattleCanvas";
+        public const string ScenarioButtonPrefabResourcePath = "TactiRogue/UI/BattleHUD/Dynamic/ScenarioButton";
+        public const string HandCardPrefabResourcePath = "TactiRogue/UI/BattleHUD/Dynamic/HandCard";
+
         private readonly Dictionary<GridPosition, BoardCellView> _boardCells = new Dictionary<GridPosition, BoardCellView>();
         private readonly Dictionary<int, CardButtonView> _cardButtons = new Dictionary<int, CardButtonView>();
         private BattleBoard3DController _board3DController;
         private Font _font;
+        private Button _scenarioButtonPrefab;
+        private CardButtonView _handCardPrefab;
         private GridLayoutGroup _boardGrid;
         private RectTransform _boardGridRect;
         private HorizontalLayoutGroup _scenarioButtonsLayout;
@@ -256,7 +206,84 @@ namespace TactiRogue
         public void Build(BattleSandboxBootstrap host)
         {
             _font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            if (TryBuildFromPrefab(host))
+            {
+                return;
+            }
 
+            BuildGenerated(host);
+        }
+
+        private bool TryBuildFromPrefab(BattleSandboxBootstrap host)
+        {
+            var prefab = Resources.Load<GameObject>(BattleHudRootPrefabResourcePath);
+            if (prefab == null)
+            {
+                return false;
+            }
+
+            var instance = UnityEngine.Object.Instantiate(prefab, host.transform, false);
+            instance.name = prefab.name;
+            var root = instance.GetComponent<BattleHudPrefabRoot>();
+            if (root == null || !root.HasRequiredReferences())
+            {
+                UnityEngine.Object.Destroy(instance);
+                return false;
+            }
+
+            ApplyPrefabReferences(root);
+            BindStaticButtons(host);
+
+            _board3DController = new BattleBoard3DController();
+            _board3DController.Build(host, root.BoardViewport);
+            _pileViewerPanel.gameObject.SetActive(false);
+            return true;
+        }
+
+        private void ApplyPrefabReferences(BattleHudPrefabRoot root)
+        {
+            _scenarioButtonsLayout = root.ScenarioButtonsContainer.GetComponent<HorizontalLayoutGroup>();
+            _handLayout = root.HandContent.GetComponent<HorizontalLayoutGroup>();
+            _handContent = root.HandContent;
+            _turnText = root.TurnText;
+            _manaText = root.ManaText;
+            _stateText = root.StateText;
+            _drawPileButton = root.DrawPileButton;
+            _drawPileButtonText = root.DrawPileButtonText;
+            _discardPileButton = root.DiscardPileButton;
+            _discardPileButtonText = root.DiscardPileButtonText;
+            _endTurnButton = root.EndTurnButton;
+            _resetButton = root.ResetButton;
+            _cancelButton = root.CancelButton;
+            _detailTitleText = root.DetailTitleText;
+            _detailBodyText = root.DetailBodyText;
+            _actionButton = root.ActionButton;
+            _actionButtonText = root.ActionButtonText;
+            _intentText = root.IntentText;
+            _previewText = root.PreviewText;
+            _logText = root.LogText;
+            _snapshotText = root.SnapshotText;
+            _pileViewerPanel = root.PileViewerPanel;
+            _pileViewerTitleText = root.PileViewerTitleText;
+            _pileViewerBodyText = root.PileViewerBodyText;
+            _pileViewerCloseButton = root.PileViewerCloseButton;
+            _scenarioButtonPrefab = root.ScenarioButtonPrefab;
+            _handCardPrefab = root.HandCardPrefab;
+        }
+
+        private void BindStaticButtons(BattleSandboxBootstrap host)
+        {
+            BindButton(_drawPileButton, host.HandleDrawPileClicked);
+            BindButton(_discardPileButton, host.HandleDiscardPileClicked);
+            BindButton(_endTurnButton, host.HandleEndTurnClicked);
+            BindButton(_resetButton, host.HandleResetClicked);
+            BindButton(_cancelButton, host.HandleCancelClicked);
+            BindButton(_actionButton, host.HandleActionButtonClicked);
+            BindButton(_pileViewerCloseButton, host.HandleClosePileViewerClicked);
+        }
+
+        private void BuildGenerated(BattleSandboxBootstrap host)
+        {
             var canvasGo = new GameObject("TactiRogueCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = canvasGo.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -384,7 +411,7 @@ namespace TactiRogue
                 for (var index = 0; index < host.Scenarios.Count; index++)
                 {
                     var scenarioIndex = index;
-                    CreateButton($"ScenarioButton_{scenarioIndex}", _scenarioButtonsLayout.transform as RectTransform, host.Scenarios[index].DisplayName, new Vector2(128f, 38f), () => host.LoadScenarioByIndex(scenarioIndex));
+                    CreateScenarioButton($"ScenarioButton_{scenarioIndex}", _scenarioButtonsLayout.transform as RectTransform, host.Scenarios[index].DisplayName, () => host.LoadScenarioByIndex(scenarioIndex));
                 }
             }
 
@@ -458,9 +485,7 @@ namespace TactiRogue
                     continue;
                 }
 
-                var cardGo = new GameObject($"Card_{card.CardInstanceId}");
-                cardGo.transform.SetParent(_handContent, false);
-                var view = cardGo.AddComponent<CardButtonView>();
+                var view = CreateHandCardView($"Card_{card.CardInstanceId}", _handContent);
                 view.Initialize(card.CardInstanceId, _font, host.HandleCardClicked);
                 _cardButtons[card.CardInstanceId] = view;
             }
@@ -698,6 +723,54 @@ namespace TactiRogue
                 : string.Join("\n", entries.Select(entry => $"- {entry.DisplayName} | Cost {entry.Cost} | {entry.CardKind}"));
         }
 
+        private Button CreateScenarioButton(string name, RectTransform parent, string label, Action onClick)
+        {
+            if (_scenarioButtonPrefab != null)
+            {
+                var button = UnityEngine.Object.Instantiate(_scenarioButtonPrefab, parent, false);
+                button.gameObject.name = name;
+                SetButtonLabel(button, label);
+                BindButton(button, onClick);
+                return button;
+            }
+
+            return CreateButton(name, parent, label, new Vector2(128f, 38f), onClick);
+        }
+
+        private CardButtonView CreateHandCardView(string name, RectTransform parent)
+        {
+            if (_handCardPrefab != null)
+            {
+                var view = UnityEngine.Object.Instantiate(_handCardPrefab, parent, false);
+                view.gameObject.name = name;
+                return view;
+            }
+
+            var cardGo = new GameObject(name);
+            cardGo.transform.SetParent(parent, false);
+            return cardGo.AddComponent<CardButtonView>();
+        }
+
+        private static void BindButton(Button button, Action onClick)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => onClick?.Invoke());
+        }
+
+        private static void SetButtonLabel(Button button, string label)
+        {
+            var text = button == null ? null : button.GetComponentInChildren<Text>(true);
+            if (text != null)
+            {
+                text.text = label;
+            }
+        }
+
         private static RectTransform CreatePanel(string name, RectTransform parent, Color color, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
         {
             var panelGo = new GameObject(name, typeof(RectTransform), typeof(Image));
@@ -720,7 +793,7 @@ namespace TactiRogue
             var image = buttonGo.GetComponent<Image>();
             image.color = new Color(0.22f, 0.24f, 0.3f, 1f);
             var button = buttonGo.GetComponent<Button>();
-            button.onClick.AddListener(() => onClick?.Invoke());
+            BindButton(button, onClick);
 
             var text = CreateText("Label", rect, 14, TextAnchor.MiddleCenter);
             text.text = label;
